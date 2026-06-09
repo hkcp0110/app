@@ -7,6 +7,7 @@ import random
 import math
 import csv
 import os
+import textwrap
 
 # 페이지 초기 구성
 st.set_page_config(
@@ -15,6 +16,18 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed"
 )
+
+# ---------------------------------------------------------------------
+# 전역 변수 및 헬퍼 함수 정의
+# ---------------------------------------------------------------------
+# 한글 필드명 매핑 전역 사전
+DISPLAY_NAMES = {
+    "수압": "수압",
+    "채광": "채광",
+    "보안": "보안",
+    "소음": "소음",
+    "청결도": "청결"
+}
 
 # 안전한 소수점 수치 형변환 헬퍼 함수
 def safe_float(val, default=0.0):
@@ -193,21 +206,21 @@ html, body, [data-testid="stAppViewContainer"] {
     padding: 0 !important;
 }
 
-/* 📱 데스크톱 뷰포트: 가상 3D 프레임 규격 완전 고정 */
+/* 📱 데스크톱 뷰포트: 가상 3D 프레임 규격 최적 확장 (430px) */
 @media (min-width: 450px) {
     [data-testid="stMainBlockContainer"] {
         background-color: #F8F9FD !important;
-        width: 390px !important;
-        max-width: 390px !important;
-        min-width: 390px !important;
-        height: 844px !important;
-        max-height: 844px !important;
-        min-height: 844px !important;
+        width: 430px !important;
+        max-width: 430px !important;
+        min-width: 430px !important;
+        height: 880px !important;
+        max-height: 880px !important;
+        min-height: 880px !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
         margin: 40px auto !important;
         padding: 52px 20px 90px 20px !important;
-        border: 12px solid #1E1E24 !important;
+        border: 12px solid #1E202C !important;
         border-radius: 52px !important;
         box-shadow: 0 25px 60px rgba(0,0,0,0.65) !important;
         position: relative !important;
@@ -248,10 +261,11 @@ html, body, [data-testid="stAppViewContainer"] {
 @media (max-width: 450px) {
     [data-testid="stMainBlockContainer"] {
         background-color: #F8F9FD !important;
-        width: 100vw !important;
-        height: 100vh !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+        height: auto !important;
         margin: 0 !important;
-        padding: 52px 16px 90px 16px !important;
+        padding: 24px 16px 110px 16px !important;
         border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
@@ -325,7 +339,7 @@ div[data-testid="stCheckbox"] label span {
     color: #1E202C !important;
 }
 
-/* 🎨 피그마 액션 버튼 (오리지널 블루 0xFF2F49D1 테마 색상 적용) */
+/* 🎨 피그마 액션 버튼 */
 div.stButton > button[kind="primary"] {
     background-color: #2F49D1 !important;
     border: none !important;
@@ -373,16 +387,17 @@ div.stButton > button[kind="secondary"] p {
     margin: 0 !important;
 }
 
-/* 📱 4열 필터 버튼 대응 */
+/* 📱 4열 필터 버튼 글자 깨짐 완전 차단 */
 div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button {
     height: 38px !important;
     min-height: 38px !important;
-    padding: 4px 2px !important;
+    padding: 4px 1px !important;
     border-radius: 10px !important;
 }
 div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button p {
-    font-size: 10px !important;
+    font-size: 9.5px !important;
     line-height: 1.15 !important;
+    white-space: nowrap !important; /* 모바일 두 줄 강제 단절 해결 */
 }
 
 /* 📱 다중 열 배치 버튼 찌그러짐 방지 통합 */
@@ -394,27 +409,34 @@ div[data-testid="column"] div.stButton > button {
 }
 div[data-testid="column"] div.stButton > button p {
     font-size: 13px !important;
+    white-space: nowrap !important;
 }
 
-/* 🔧 단품 배지 밀착 정렬 */
+/* 🔧 단품 배지 밀착 정렬 및 줄바꿈 버그 방지 개선 */
 .badge-blue {
     background-color: #EFF1FE;
     color: #2F49D1;
-    padding: 6px 14px;
-    border-radius: 14px;
-    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 11.5px;
     font-weight: 800;
     display: inline-block;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    line-height: 1.3;
 }
 
 .badge-orange {
     background-color: #FFF2EE;
     color: #FF5A36;
-    padding: 6px 14px;
-    border-radius: 14px;
-    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 11.5px;
     font-weight: 800;
     display: inline-block;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    line-height: 1.3;
 }
 
 /* 📱 상단 고정 상태 바 */
@@ -423,9 +445,6 @@ div[data-testid="column"] div.stButton > button p {
     justify-content: space-between;
     align-items: center;
     position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
     background-color: #FFFFFF !important;
     padding: 10px 24px 8px 24px;
     z-index: 1000000 !important;
@@ -435,11 +454,25 @@ div[data-testid="column"] div.stButton > button p {
     box-sizing: border-box;
 }
 
-.ios-status-time {
-    font-size: 14px;
-    font-weight: 700;
-    color: #1E202C;
-    letter-spacing: -0.3px;
+@media (min-width: 450px) {
+    .ios-status-bar {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 430px !important;
+        max-width: 430px !important;
+        right: auto !important;
+        top: 40px !important;
+        border-top-left-radius: 40px !important;
+        border-top-right-radius: 40px !important;
+        border-left: 1px solid #EFF1FE !important;
+        border-right: 1px solid #EFF1FE !important;
+    }
+}
+
+@media (max-width: 450px) {
+    .ios-status-bar {
+        display: none !important;
+    }
 }
 
 .nav-bar-anchor {
@@ -448,9 +481,6 @@ div[data-testid="column"] div.stButton > button p {
 
 div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
     position: fixed !important;
-    bottom: 0px !important;
-    left: 0 !important;
-    right: 0 !important;
     background-color: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: blur(25px) !important;
     border-top: 1px solid #EFF1FE !important;
@@ -459,6 +489,31 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
     margin: 0 !important;
     display: flex !important;
     justify-content: space-around !important;
+}
+
+@media (min-width: 450px) {
+    div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 430px !important;
+        max-width: 430px !important;
+        right: auto !important;
+        bottom: 40px !important;
+        border-bottom-left-radius: 40px !important;
+        border-bottom-right-radius: 40px !important;
+        border-left: 1px solid #EFF1FE !important;
+        border-right: 1px solid #EFF1FE !important;
+        padding: 10px 14px 20px 14px !important;
+    }
+}
+
+@media (max-width: 450px) {
+    div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100vw !important;
+    }
 }
 
 /* 📋 네비게이션 탭 내부 버튼 */
@@ -622,11 +677,10 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 🎨 [Onboarding Splash] 플래터 스타일 온보딩 (Glow 후광 및 오버랩 물결 SVG 구현)
-# 마크다운의 줄바꿈 파싱 충돌을 피하기 위해 모든 행을 왼쪽 정렬 처리하였습니다.
 if st.session_state.show_splash:
     st.markdown("""
 <div class="splash-wrapper" style="position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; height: 500px; margin-top: 20px; overflow: hidden; box-sizing: border-box;">
-<svg viewBox="0 0 390 500" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none;">
+<svg viewBox="0 0 430 500" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none;">
 <circle cx="429" cy="-84" r="351" fill="url(#topGrad)" />
 <path d="M0 320C148.2 340 253.5 420 351 500H0V320Z" fill="url(#wave1)" />
 <path d="M0 370C124.8 390 214.5 440 292.5 500H0V370Z" fill="url(#wave2)" />
@@ -677,7 +731,7 @@ if st.session_state.show_splash:
     st.stop()
 
 
-# 🏠 유형별 수평 레이아웃 벡터 아이콘 정의 (House / Building Painter 매칭)
+# 🏠 유형별 수평 레이아웃 벡터 아이콘 정의
 svg_house = (
     "<svg width='26' height='26' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'>"
     "<path d='M3 11l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/>"
@@ -753,12 +807,13 @@ if st.session_state.current_tab == "가이드":
             "관리비에 포함되는 항목은 무엇인가요?"
         ]
         for q in q_items:
+            # 디자인 개선: 말줄임 시 번호나 아이콘 하단으로 텍스트가 파고들지 않도록 flex-start 정렬 배치
             st.markdown(
-                f"<div style='display:flex; align-items:center; gap:12px; margin-bottom:14px;'>"
-                f"<div style='width:24px; height:24px; background-color:#EFF1FE; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;'>"
-                f"<svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='3'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>"
-                f"</div>"
-                f"<span style='font-size:13.5px; color:#1E202C; font-weight:600;'>{q}</span>"
+                f"<div style='display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;'>"
+                f"  <div style='width:24px; height:24px; background-color:#EFF1FE; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;'>"
+                f"    <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='3'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>"
+                f"  </div>"
+                f"  <span style='font-size:13.5px; color:#1E202C; font-weight:600; line-height:1.4;'>{q}</span>"
                 f"</div>",
                 unsafe_allow_html=True
             )
@@ -1090,7 +1145,7 @@ elif st.session_state.current_tab == "체크":
                 st.session_state.current_step += 1
                 st.rerun()
             else:
-                # 종합 스코어 분석 산출 (Dart 로직 100% 매칭)
+                # 종합 스코어 분석 산출
                 w_time = st.session_state.chk_water_timer
                 w_score = 100.0 if w_time <= 5.0 else (80.0 if w_time <= 8.0 else 50.0)
                 if st.session_state.chk_drainage == "불량 (잘 안 빠짐)" or st.session_state.chk_toilet == "불량":
@@ -1161,7 +1216,7 @@ elif st.session_state.current_tab == "체크":
                     "attached_photos": list(st.session_state.chk_photos),
                     "toilet_water_pressure": st.session_state.chk_toilet,
                     "simultaneous_drainage_issue": st.session_state.chk_sim_drainage,
-                    "obstruction_level": st.session_state.chk_obstruction,
+                    "obstruction_level": "보통",
                     "window_condensation": st.session_state.chk_condensation,
                     "parking_status": st.session_state.chk_parking,
                     "trash_area_clean": st.session_state.chk_trash,
@@ -1176,8 +1231,11 @@ elif st.session_state.current_tab == "체크":
                 st.session_state.properties.append(new_prop)
                 st.session_state.selected_to_compare.add(new_id)
                 
+                # 버그 수정: 위젯 상태 캐시값도 동시에 초기화
                 for k in chk_defaults.keys():
                     st.session_state[k] = chk_defaults[k]
+                    if f"input_{k}" in st.session_state:
+                        st.session_state[f"input_{k}"] = chk_defaults[k]
                 st.session_state.current_step = 0
                 st.session_state.current_tab = "리포트"
                 st.success("종합 임장 분석서가 완성되었습니다!")
@@ -1210,7 +1268,7 @@ elif st.session_state.current_tab == "리포트":
             st.session_state.show_delete_confirm = True
             st.rerun()
 
-        # 🗑️ Dart 스타일의 매물 완전 삭제 대화 상자 모사
+        # 매물 삭제 분기 처리
         if st.session_state.show_delete_confirm:
             with st.container(border=True):
                 st.markdown(f"### **매물 완전 삭제**")
@@ -1252,7 +1310,7 @@ elif st.session_state.current_tab == "리포트":
                 "<div>"
                 "<span style='font-size:13px; color:#4A4E69; font-weight:bold;'>거주 적합도</span>"
                 f"<h1 style='margin:2px 0; color:#2F49D1; font-size:32px; font-weight:800; line-height:1;'>{active_prop['overall_score']}<span style='font-size:15px; font-weight:bold;'> 점</span></h1>"
-                "<span style='font-size:11px; color:#7B809A;'>전체적으로 괜찮은 방이에요</span>"
+                "<span style='font-size:11px; color:#7B809A;'>정성 항목을 점수화한 지표입니다</span>"
                 "</div>"
                 "</div>"
             )
@@ -1299,47 +1357,91 @@ elif st.session_state.current_tab == "리포트":
         with st.container(border=True):
             st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
         
-        col_pro, col_con = st.columns(2)
-        with col_pro:
-            with st.container(border=True):
-                pro_html = (
-                    "<div style='display:flex; align-items:center; gap:8px; margin-bottom:12px;'>"
-                    "  <div style='width:24px; height:24px; display:flex; align-items:center; justify-content:center;'>"
-                    "    <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='3'><path d='M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3'/></svg>"
-                    "  </div>"
-                    "  <span style='color:#1E202C; font-weight:bold; font-size:13px;'>강점</span>"
-                    "</div>"
-                    f"<span class='badge-blue' style='margin-right:4px; margin-bottom:4px;'>채광 92</span>"
-                    f"<span class='badge-blue'>청결 88</span>"
-                )
-                st.markdown(pro_html, unsafe_allow_html=True)
+        # 선택된 매물의 항목별 강점/주의 지수를 동적으로 산출합니다.
+        scores_dict = active_prop.get("scores", {})
+        sorted_scores = sorted(scores_dict.items(), key=lambda x: x[1], reverse=True)
+        
+        if len(sorted_scores) >= 2:
+            strongest_key, strongest_val = sorted_scores[0]
+            second_key, second_val = sorted_scores[1]
+            weakest_key, weakest_val = sorted_scores[-1]
+        else:
+            strongest_key, strongest_val = "채광", 50
+            second_key, second_val = "청결도", 50
+            weakest_key, weakest_val = "소음", 50
             
-        with col_con:
-            with st.container(border=True):
-                con_html = (
-                    "<div style='display:flex; align-items:center; gap:8px; margin-bottom:12px;'>"
-                    "  <div style='width:24px; height:24px; display:flex; align-items:center; justify-content:center;'>"
-                    "    <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='#FF5A36' stroke-width='3'><path d='M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01'/></svg>"
-                    "  </div>"
-                    "  <span style='color:#1E202C; font-weight:bold; font-size:13px;'>주의</span>"
-                    "</div>"
-                    f"<span class='badge-orange' style='margin-right:4px; margin-bottom:4px;'>소음 41</span>"
-                    "<span class='badge-orange'>밤 시간대 재방문 추천</span>"
-                )
-                st.markdown(con_html, unsafe_allow_html=True)
+        strongest_label = DISPLAY_NAMES.get(strongest_key, strongest_key)
+        second_label = DISPLAY_NAMES.get(second_key, second_key)
+        weakest_label = DISPLAY_NAMES.get(weakest_key, weakest_key)
+        
+        # 약점 종류에 따라 맞춤 권장액션 결정
+        weak_rec = "보완 요소 점검 필요"
+        if weakest_key == "소음":
+            weak_rec = "야간 방문 권장"
+        elif weakest_key == "보안":
+            weak_rec = "주변 조도 확인"
+        elif weakest_key == "수압":
+            weak_rec = "동시 배수 점검"
+        elif weakest_key == "채광":
+            weak_rec = "낮 시간대 확인"
+        elif weakest_key == "청결도":
+            weak_rec = "누수/장판 확인"
+
+        # 🛠️ 버그 수정: 들여쓰기 제거를 위해 textwrap.dedent를 입히고, HTML 해석 끊김 버그 예방을 위해 카드 사이의 모든 빈 줄을 완전 제거했습니다.
+        pro_con_html = textwrap.dedent(f"""
+        <div style="display: flex; gap: 12px; margin-bottom: 12px; box-sizing: border-box; width: 100%;">
+            <div style="flex: 1; background-color: #FFFFFF; border: 1.5px solid #EFF1FE; border-radius: 20px; padding: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.01); display: flex; flex-direction: column;">
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+                    <div style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2F49D1" stroke-width="3">
+                            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                        </svg>
+                    </div>
+                    <span style="color: #1E202C; font-weight: 800; font-size: 13.5px; line-height: 1;">강점</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start; width: 100%;">
+                    <span class="badge-blue">{strongest_label} {int(strongest_val)}</span>
+                    <span class="badge-blue">{second_label} {int(second_val)}</span>
+                </div>
+            </div>
+            <div style="flex: 1; background-color: #FFFFFF; border: 1.5px solid #EFF1FE; border-radius: 20px; padding: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.01); display: flex; flex-direction: column;">
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+                    <div style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF5A36" stroke-width="3">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"/>
+                        </svg>
+                    </div>
+                    <span style="color: #1E202C; font-weight: 800; font-size: 13.5px; line-height: 1;">주의</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start; width: 100%;">
+                    <span class="badge-orange">{weakest_label} {int(weakest_val)}</span>
+                    <span class="badge-orange">{weak_rec}</span>
+                </div>
+            </div>
+        </div>
+        """)
+        st.markdown(pro_con_html, unsafe_allow_html=True)
             
         with st.container(border=True):
-            summary_html = (
-                "<div style='display:flex; gap:12px; align-items:start;'> "
-                "<div style='width:36px; height:36px; background-color:#EFF1FE; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;'>"
-                "  <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='2.5'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>"
-                "</div>"
-                "<div>"
-                "<h5 style='margin:0; color:#1E202C; font-size:13px; font-weight:bold;'>체크 결과 요약</h5>"
-                "<p style='margin:4px 0 0 0; color:#4A4E69; font-size:12.5px; line-height:1.4;'>채광 및 청결 상태가 좋은 편이에요. 다만 소음 점수가 낮아 밤 시간대에 한 번 더 확인해 보는 것을 추천해요.</p>"
-                "</div>"
-                "</div>"
-            )
+            # 동적 데이터 요약 피드백 메시지 이식 (70점 기준으로 보완 설명 문구 간결화)
+            pro_desc = f"{strongest_label} 및 {second_label} 상태가 상대적으로 우수하다는 강점을 가지고 있습니다."
+            if weakest_val < 70:
+                con_desc = f"다만, 보완이 필요한 {weakest_label} 지수를 고려해 계약을 결정하기 전에 꼭 {weak_rec} 활동을 권장해 드립니다."
+            else:
+                con_desc = "전반적으로 평가 항목들이 고른 균형을 이루고 있어 만족스러운 생활이 기대됩니다."
+            summary_text = f"{pro_desc} {con_desc}"
+            
+            summary_html = textwrap.dedent(f"""
+            <div style='display:flex; gap:12px; align-items:start;'> 
+                <div style='width:36px; height:36px; background-color:#EFF1FE; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;'>
+                    <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='2.5'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>
+                </div>
+                <div>
+                    <h5 style='margin:0; color:#1E202C; font-size:13px; font-weight:bold;'>체크 결과 요약</h5>
+                    <p style='margin:4px 0 0 0; color:#4A4E69; font-size:12.5px; line-height:1.4;'>{summary_text}</p>
+                </div>
+            </div>
+            """)
             st.markdown(summary_html, unsafe_allow_html=True)
         
         st.write("")
@@ -1399,7 +1501,7 @@ elif st.session_state.current_tab == "비교":
     avail_ids = [p["id"] for p in filtered_list]
     default_selections = [pid for pid in st.session_state.selected_to_compare if pid in avail_ids]
     
-    # Dart ChoiceChip 동기화 (filtered 목록 3개 초과 시 셀렉터 활성화)
+    # Dart ChoiceChip 동기화
     if len(filtered_list) > 3:
         selected_ids = st.multiselect(
             "비교 분석 매물 지정 (최대 3개)",
@@ -1483,7 +1585,39 @@ elif st.session_state.current_tab == "비교":
         st.markdown(f"<div class='comp-table'>{html_rows}</div>", unsafe_allow_html=True)
         st.write("")
         
-        # 한눈에 보기 카드 섹션 (텍스트 및 테마 색상 동기화)
+        # 한눈에 보기 가이드 카드를 실제 선택된 매물들의 동적 상태와 완전 동기화시킵니다.
+        insight_items_html = ""
+        colors_badge = ["#2F49D1", "#F2994A", "#27AE60"]
+        for idx_p, sp in enumerate(selected_props):
+            bg_col = colors_badge[idx_p % len(colors_badge)]
+            s_dict = sp.get("scores", {})
+            
+            if s_dict:
+                high_key = max(s_dict, key=s_dict.get)
+                low_key = min(s_dict, key=s_dict.get)
+                high_name = DISPLAY_NAMES.get(high_key, high_key)
+                low_name = DISPLAY_NAMES.get(low_key, low_key)
+                
+                # 최저 점수 필터 기준을 `< 70`으로 조정
+                if s_dict[low_key] < 70:
+                    desc = f"<b>{high_name}</b>은 우수하나 상대적인 <b>{low_name}</b> 요소를 확인해볼 필요가 있습니다."
+                else:
+                    desc = f"<b>{high_name}</b> 지표가 돋보이며 모든 항목이 전반적으로 고른 우수한 상태입니다."
+            else:
+                desc = "분석된 정밀 스코어 데이터 정보가 존재하지 않습니다."
+                
+            short_name = sp["name"][:10] + ".." if len(sp["name"]) > 10 else sp["name"]
+            
+            # 번호 아이콘 레이아웃 개선
+            insight_items_html += (
+                f"<div style='display:flex; gap:12px; align-items:flex-start; margin-bottom:12px; box-sizing: border-box; width: 100%;'>"
+                f"  <div style='background-color:{bg_col}; color:white; font-size:11px; font-weight:800; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;'>{idx_p + 1}</div>"
+                f"  <div style='font-size:13px; color:#4A4E69; line-height:1.45; word-break:keep-all;'>"
+                f"    <span style='color:{bg_col}; font-weight:800; font-size:13.5px;'>{short_name}</span>: {desc}"
+                f"  </div>"
+                f"</div>"
+            )
+            
         with st.container(border=True):
             insight_html = (
                 "<div style='display:flex; align-items:center; gap:8px; margin-bottom:14px;'>"
@@ -1492,10 +1626,8 @@ elif st.session_state.current_tab == "비교":
                 "  </div>"
                 "  <span style='color:#1E202C; font-weight:800; font-size:14px;'>한눈에 보기</span>"
                 "</div>"
-                "<div style='display:flex; flex-direction:column; gap:12px;'>"
-                "  <div style='display:flex; gap:10px; align-items:baseline;'><span style='background-color:#2F49D1; color:white; font-size:11px; font-weight:bold; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;'>A</span><p style='margin:0; font-size:13px; color:#4A4E69;'><b style='color:#2F49D1;'>A: </b>전체적으로 가장 균형적</p></div>"
-                "  <div style='display:flex; gap:10px; align-items:baseline;'><span style='background-color:#F2994A; color:white; font-size:11px; font-weight:bold; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;'>B</span><p style='margin:0; font-size:13px; color:#4A4E69;'><b style='color:#F2994A;'>B: </b>보안은 좋지만 청결 확인 필요</p></div>"
-                "  <div style='display:flex; gap:10px; align-items:baseline;'><span style='background-color:#27AE60; color:white; font-size:11px; font-weight:bold; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;'>C</span><p style='margin:0; font-size:13px; color:#4A4E69;'><b style='color:#27AE60;'>C: </b>가격은 좋지만 생활 만족도는 낮을 수 있음</p></div>"
+                f"<div style='display:flex; flex-direction:column; gap:12px;'>"
+                f"{insight_items_html}"
                 "</div>"
             )
             st.markdown(insight_html, unsafe_allow_html=True)
