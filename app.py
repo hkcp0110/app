@@ -311,16 +311,18 @@ html, body, [data-testid="stAppViewContainer"] {
         flex: 1 1 0% !important;
     }
     
-    /* 1단계 기본 조건 입력창: 라벨과 입력 공간의 가로 비율 최적화 (라벨 85px 고정) */
+    /* 1단계 기본 조건 입력창: 첫 번째 컬럼(라벨) 가로 폭 지정 (라벨 85px 고정) */
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="stColumn"]:nth-child(1),
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="column"]:nth-child(1) {
         flex: 0 0 85px !important;
+        min-width: 85px !important;
     }
     
-    /* 1단계 기본 조건 입력창: 단위 배지(만원, %) 가로 크기 최적화 (배지 65px 고정) */
-    div[data-testid="stHorizontalBlock"]:has(input) > div[data-testid="stColumn"]:nth-child(2),
-    div[data-testid="stHorizontalBlock"]:has(input) > div[data-testid="column"]:nth-child(2) {
+    /* 1단계 기본 조건 입력창: 세 번째 컬럼(단위 배지 만원, %, 평) 가로 폭 지정 (배지 65px 고정) */
+    div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="stColumn"]:nth-child(3),
+    div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="column"]:nth-child(3) {
         flex: 0 0 65px !important;
+        min-width: 65px !important;
     }
     
     /* 3단계 리포트 탭: 상단 셀렉트박스와 삭제 버튼 가로 정렬 비율 최적화 (삭제 버튼 52px 고정) */
@@ -966,18 +968,21 @@ elif st.session_state.current_tab == "체크":
             </div>
             """, unsafe_allow_html=True)
             
+            # 버그 수정: 중첩 st.columns 대신 하나의 3열 평면 컬럼(Flat columns)으로 배치하여 CSS 찌그러짐을 해결합니다.
             def styled_input_row(label, val_key, placeholder, suffix=None):
-                col_lbl, col_inp = st.columns([1.1, 2.9])
-                with col_lbl:
-                    st.markdown(f"<div style='margin-top: 14px; font-weight: bold; font-size: 14px; color: #4A4E69;'>{label}</div>", unsafe_allow_html=True)
-                with col_inp:
-                    if suffix:
-                        col_input_box, col_badge = st.columns([3.1, 0.9])
-                        with col_input_box:
-                            st.session_state[val_key] = st.text_input(label, value=st.session_state[val_key], placeholder=placeholder, label_visibility="collapsed", key=f"input_{val_key}")
-                        with col_badge:
-                            st.markdown(f"<div style='background-color: #EFF1FE; color: #2F49D1; font-weight: bold; font-size: 11.5px; border-radius: 12px; padding: 10px 0; margin-top: 4px; text-align: center; height: auto;'>{suffix}</div>", unsafe_allow_html=True)
-                    else:
+                if suffix:
+                    col_lbl, col_inp, col_badge = st.columns([1.1, 2.0, 0.9])
+                    with col_lbl:
+                        st.markdown(f"<div style='margin-top: 14px; font-weight: bold; font-size: 14px; color: #4A4E69;'>{label}</div>", unsafe_allow_html=True)
+                    with col_inp:
+                        st.session_state[val_key] = st.text_input(label, value=st.session_state[val_key], placeholder=placeholder, label_visibility="collapsed", key=f"input_{val_key}")
+                    with col_badge:
+                        st.markdown(f"<div style='background-color: #EFF1FE; color: #2F49D1; font-weight: bold; font-size: 11.5px; border-radius: 12px; padding: 10px 0; margin-top: 4px; text-align: center; height: auto;'>{suffix}</div>", unsafe_allow_html=True)
+                else:
+                    col_lbl, col_inp = st.columns([1.1, 2.9])
+                    with col_lbl:
+                        st.markdown(f"<div style='margin-top: 14px; font-weight: bold; font-size: 14px; color: #4A4E69;'>{label}</div>", unsafe_allow_html=True)
+                    with col_inp:
                         st.session_state[val_key] = st.text_input(label, value=st.session_state[val_key], placeholder=placeholder, label_visibility="collapsed", key=f"input_{val_key}")
 
             styled_input_row("매물 별칭", "chk_name", "예: 신촌 원룸 A")
