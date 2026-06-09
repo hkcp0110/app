@@ -275,6 +275,36 @@ html, body, [data-testid="stAppViewContainer"] {
     }
 }
 
+/* 📱 모바일 기기 접속 시 st.columns 세로 Stacking(붕괴) 차단 및 가로 정렬 강제 */
+@media (max-width: 640px) {
+    div[data-testid="stHorizontalBlock"] {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+    }
+    div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+        min-width: 0 !important;
+        width: 100% !important;
+        flex: 1 1 0% !important;
+    }
+    
+    /* 1단계 기본 조건 입력창: 라벨과 입력 공간의 가로 비율 최적화 (라벨 85px 고정) */
+    div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="column"]:nth-child(1) {
+        flex: 0 0 85px !important;
+    }
+    
+    /* 1단계 기본 조건 입력창: 단위 배지(만원, %) 가로 크기 최적화 (배지 65px 고정) */
+    div[data-testid="stHorizontalBlock"]:has(input) > div[data-testid="column"]:nth-child(2) {
+        flex: 0 0 65px !important;
+    }
+    
+    /* 3단계 리포트 탭: 상단 셀렉트박스와 삭제 버튼 가로 정렬 비율 최적화 (삭제 버튼 52px 고정) */
+    div[data-testid="stHorizontalBlock"]:has([data-testid="stSelectbox"]) > div[data-testid="column"]:nth-child(2) {
+        flex: 0 0 52px !important;
+    }
+}
+
 /* 💡 스크롤바 디자인 슬림화 */
 [data-testid="stMainBlockContainer"]::-webkit-scrollbar {
     width: 4px;
@@ -807,7 +837,6 @@ if st.session_state.current_tab == "가이드":
             "관리비에 포함되는 항목은 무엇인가요?"
         ]
         for q in q_items:
-            # 디자인 개선: 말줄임 시 번호나 아이콘 하단으로 텍스트가 파고들지 않도록 flex-start 정렬 배치
             st.markdown(
                 f"<div style='display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;'>"
                 f"  <div style='width:24px; height:24px; background-color:#EFF1FE; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;'>"
@@ -882,7 +911,6 @@ elif st.session_state.current_tab == "체크":
             </div>
             """, unsafe_allow_html=True)
             
-            # 단위 누락 문제를 해결하기 위해 Streamlit Native 컬럼 방식으로 우측 정렬 이식
             def styled_input_row(label, val_key, placeholder, suffix=None):
                 col_lbl, col_inp = st.columns([1.1, 2.9])
                 with col_lbl:
@@ -1387,7 +1415,7 @@ elif st.session_state.current_tab == "리포트":
         elif weakest_key == "청결도":
             weak_rec = "누수/장판 확인"
 
-        # 🛠️ 버그 수정: 들여쓰기 제거를 위해 textwrap.dedent를 입히고, HTML 해석 끊김 버그 예방을 위해 카드 사이의 모든 빈 줄을 완전 제거했습니다.
+        # 🛠️ 버그 수정: 들여쓰기 제거 및 HTML 해석 누수 차단
         pro_con_html = textwrap.dedent(f"""
         <div style="display: flex; gap: 12px; margin-bottom: 12px; box-sizing: border-box; width: 100%;">
             <div style="flex: 1; background-color: #FFFFFF; border: 1.5px solid #EFF1FE; border-radius: 20px; padding: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.01); display: flex; flex-direction: column;">
