@@ -262,8 +262,17 @@ html, body, [data-testid="stAppViewContainer"] {
     }
 }
 
-/* 📱 모바일 실기기 접속 대응 (여백 상충 문제 완전 리셋) */
+/* 📱 모바일 실기기 접속 대응 (여백 및 배경 색상 완벽 피팅) */
 @media (max-width: 450px) {
+    /* 모바일 환경에서는 3D 프레임이 무너지므로 전체 배경을 깔끔한 라이트 블루/그레이로 통합하여 아래쪽 검은 영역을 완전히 차단 */
+    html, body, 
+    [data-testid="stAppViewContainer"], 
+    section.main, 
+    [data-testid="stApp"],
+    .stApp {
+        background-color: #F8F9FD !important;
+    }
+
     .block-container,
     [data-testid="stMainBlockContainer"],
     [data-testid="stAppViewBlockContainer"],
@@ -281,7 +290,7 @@ html, body, [data-testid="stAppViewContainer"] {
         box-shadow: none !important;
         position: relative !important;
         box-sizing: border-box !important;
-        transform: translate(0, 0) !important;
+        transform: none !important; /* 모바일에서 fixed 원소 정렬 왜곡을 막기 위해 transform 초기화 */
     }
 }
 
@@ -293,23 +302,29 @@ html, body, [data-testid="stAppViewContainer"] {
         align-items: stretch !important;
         gap: 8px !important;
     }
+    
+    /* stColumn과 column 두 가지 스트림릿 버전에 안전 호환되도록 동시 타겟팅 (너비 밀림 현상 완전 해결) */
+    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"],
     div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
         min-width: 0 !important;
-        width: 100% !important;
+        width: auto !important; 
         flex: 1 1 0% !important;
     }
     
     /* 1단계 기본 조건 입력창: 라벨과 입력 공간의 가로 비율 최적화 (라벨 85px 고정) */
+    div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="stColumn"]:nth-child(1),
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="column"]:nth-child(1) {
         flex: 0 0 85px !important;
     }
     
     /* 1단계 기본 조건 입력창: 단위 배지(만원, %) 가로 크기 최적화 (배지 65px 고정) */
+    div[data-testid="stHorizontalBlock"]:has(input) > div[data-testid="stColumn"]:nth-child(2),
     div[data-testid="stHorizontalBlock"]:has(input) > div[data-testid="column"]:nth-child(2) {
         flex: 0 0 65px !important;
     }
     
     /* 3단계 리포트 탭: 상단 셀렉트박스와 삭제 버튼 가로 정렬 비율 최적화 (삭제 버튼 52px 고정) */
+    div[data-testid="stHorizontalBlock"]:has([data-testid="stSelectbox"]) > div[data-testid="stColumn"]:nth-child(2),
     div[data-testid="stHorizontalBlock"]:has([data-testid="stSelectbox"]) > div[data-testid="column"]:nth-child(2) {
         flex: 0 0 52px !important;
     }
@@ -428,12 +443,14 @@ div.stButton > button[kind="secondary"] p {
 }
 
 /* 📱 4열 필터 버튼 글자 깨짐 완전 차단 */
+div:has(> div > .filter-buttons-marker) ~ div div[data-testid="stColumn"] div.stButton > button,
 div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button {
     height: 38px !important;
     min-height: 38px !important;
     padding: 4px 1px !important;
     border-radius: 10px !important;
 }
+div:has(> div > .filter-buttons-marker) ~ div div[data-testid="stColumn"] div.stButton > button p,
 div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button p {
     font-size: 9.5px !important;
     line-height: 1.15 !important;
@@ -442,18 +459,21 @@ div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stBu
 
 /* 소형 기기 대상 필터 글씨 크기 자동 핏 */
 @media (max-width: 380px) {
+    div:has(> div > .filter-buttons-marker) ~ div div[data-testid="stColumn"] div.stButton > button p,
     div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button p {
         font-size: 8px !important;
     }
 }
 
 /* 📱 다중 열 배치 버튼 찌그러짐 방지 통합 */
+div[data-testid="stColumn"] div.stButton > button,
 div[data-testid="column"] div.stButton > button {
     min-height: 44px !important;
     height: auto !important;
     border-radius: 12px !important;
     padding: 8px 10px !important;
 }
+div[data-testid="stColumn"] div.stButton > button p,
 div[data-testid="column"] div.stButton > button p {
     font-size: 13px !important;
     white-space: nowrap !important;
@@ -560,7 +580,19 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
         left: 0 !important;
         right: 0 !important;
         bottom: 0 !important;
-        width: 100% !important; /* 100vw 에서 100%로 전향하여 좌우 바운스 흔들림 버그 원천 제어 */
+        width: 100% !important; /* 수평 스크롤 방지 */
+        transform: none !important; /* 데스크톱용 트랜스폼 중앙 정렬 오버라이드하여 좌측 치우침 해결 */
+        border-radius: 0 !important;
+        border: none !important;
+        border-top: 1px solid #EFF1FE !important;
+    }
+    
+    /* 하단 내비게이션 컬럼 균등 너비 배분 호환 보장 */
+    div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"],
+    div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+        flex: 1 1 0% !important;
+        width: 25% !important;
+        min-width: 0 !important;
     }
     
     /* 모바일 기기 화면에서는 이미 탑재된 OS 하단 바가 있으므로 가상 터치 표시 바를 숨김 처리합니다. */
