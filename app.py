@@ -198,6 +198,7 @@ st.markdown("""
 [data-testid="stHeader"] { display: none !important; }
 footer { display: none !important; visibility: hidden !important; }
 [data-testid="stToolbar"] { display: none !important; }
+[data-testid="collapsedControl"] { display: none !important; } /* 사이드바 화살표 원천 차단 */
 
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -208,7 +209,10 @@ html, body, [data-testid="stAppViewContainer"] {
 
 /* 📱 데스크톱 뷰포트: 가상 3D 프레임 규격 최적 확장 (430px) */
 @media (min-width: 450px) {
-    [data-testid="stMainBlockContainer"] {
+    .block-container,
+    [data-testid="stMainBlockContainer"],
+    [data-testid="stAppViewBlockContainer"],
+    .stAppViewBlockContainer {
         background-color: #F8F9FD !important;
         width: 430px !important;
         max-width: 430px !important;
@@ -242,6 +246,7 @@ html, body, [data-testid="stAppViewContainer"] {
         display: block !important;
         z-index: 1000002 !important;
     }
+    
     div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"]::after {
         content: "" !important;
         position: absolute !important;
@@ -257,15 +262,20 @@ html, body, [data-testid="stAppViewContainer"] {
     }
 }
 
-/* 📱 모바일 실기기 접속 대응 */
+/* 📱 모바일 실기기 접속 대응 (여백 상충 문제 완전 리셋) */
 @media (max-width: 450px) {
-    [data-testid="stMainBlockContainer"] {
+    .block-container,
+    [data-testid="stMainBlockContainer"],
+    [data-testid="stAppViewBlockContainer"],
+    .stAppViewBlockContainer {
         background-color: #F8F9FD !important;
         width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 24px 16px 110px 16px !important;
+        padding: 24px 12px 120px 12px !important; /* 바닥 메뉴 여유분 확보 */
         border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
@@ -275,7 +285,7 @@ html, body, [data-testid="stAppViewContainer"] {
     }
 }
 
-/* 📱 모바일 기기 접속 시 st.columns 세로 Stacking(붕괴) 차단 및 가로 정렬 강제 */
+/* 📱 모바일 기기 (화면 폭 640px 이하)에서 st.columns 세로 Stacking(붕괴) 차단 및 가로 정렬 강제 */
 @media (max-width: 640px) {
     div[data-testid="stHorizontalBlock"] {
         flex-direction: row !important;
@@ -430,6 +440,13 @@ div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stBu
     white-space: nowrap !important; /* 모바일 두 줄 강제 단절 해결 */
 }
 
+/* 소형 기기 대상 필터 글씨 크기 자동 핏 */
+@media (max-width: 380px) {
+    div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button p {
+        font-size: 8px !important;
+    }
+}
+
 /* 📱 다중 열 배치 버튼 찌그러짐 방지 통합 */
 div[data-testid="column"] div.stButton > button {
     min-height: 44px !important;
@@ -509,6 +526,7 @@ div[data-testid="column"] div.stButton > button p {
     display: none;
 }
 
+/* 하단 내비게이션 영역 고정 및 스타일 */
 div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
     position: fixed !important;
     background-color: rgba(255, 255, 255, 0.98) !important;
@@ -542,7 +560,12 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
         left: 0 !important;
         right: 0 !important;
         bottom: 0 !important;
-        width: 100vw !important;
+        width: 100% !important; /* 100vw 에서 100%로 전향하여 좌우 바운스 흔들림 버그 원천 제어 */
+    }
+    
+    /* 모바일 기기 화면에서는 이미 탑재된 OS 하단 바가 있으므로 가상 터치 표시 바를 숨김 처리합니다. */
+    div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"]::after {
+        display: none !important;
     }
 }
 
@@ -1415,7 +1438,6 @@ elif st.session_state.current_tab == "리포트":
         elif weakest_key == "청결도":
             weak_rec = "누수/장판 확인"
 
-        # 🛠️ 버그 수정: 들여쓰기 제거 및 HTML 해석 누수 차단
         pro_con_html = textwrap.dedent(f"""
         <div style="display: flex; gap: 12px; margin-bottom: 12px; box-sizing: border-box; width: 100%;">
             <div style="flex: 1; background-color: #FFFFFF; border: 1.5px solid #EFF1FE; border-radius: 20px; padding: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.01); display: flex; flex-direction: column;">
@@ -1451,7 +1473,6 @@ elif st.session_state.current_tab == "리포트":
         st.markdown(pro_con_html, unsafe_allow_html=True)
             
         with st.container(border=True):
-            # 동적 데이터 요약 피드백 메시지 이식 (70점 기준으로 보완 설명 문구 간결화)
             pro_desc = f"{strongest_label} 및 {second_label} 상태가 상대적으로 우수하다는 강점을 가지고 있습니다."
             if weakest_val < 70:
                 con_desc = f"다만, 보완이 필요한 {weakest_label} 지수를 고려해 계약을 결정하기 전에 꼭 {weak_rec} 활동을 권장해 드립니다."
@@ -1636,7 +1657,6 @@ elif st.session_state.current_tab == "비교":
                 
             short_name = sp["name"][:10] + ".." if len(sp["name"]) > 10 else sp["name"]
             
-            # 번호 아이콘 레이아웃 개선
             insight_items_html += (
                 f"<div style='display:flex; gap:12px; align-items:flex-start; margin-bottom:12px; box-sizing: border-box; width: 100%;'>"
                 f"  <div style='background-color:{bg_col}; color:white; font-size:11px; font-weight:800; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;'>{idx_p + 1}</div>"
