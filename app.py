@@ -223,28 +223,13 @@ html, body, [data-testid="stAppViewContainer"] {
         overflow-y: auto !important;
         overflow-x: hidden !important;
         margin: 40px auto !important;
-        padding: 52px 20px 90px 20px !important;
+        padding: 32px 20px 90px 20px !important; /* 가상 상태바 제거에 따라 상단 패딩 축소 조정 */
         border: 12px solid #1E202C !important;
         border-radius: 52px !important;
         box-shadow: 0 25px 60px rgba(0,0,0,0.65) !important;
         position: relative !important;
         box-sizing: border-box !important;
         transform: translate(0, 0) !important;
-    }
-    
-    /* 데스크톱 프레임 내부 노치 및 가상 홈 바 배치 */
-    .ios-status-bar::after {
-        content: "" !important;
-        position: absolute !important;
-        top: 10px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        width: 100px !important;
-        height: 26px !important;
-        background-color: #000000 !important;
-        border-radius: 15px !important;
-        display: block !important;
-        z-index: 1000002 !important;
     }
     
     div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"]::after {
@@ -444,7 +429,7 @@ div.stButton > button[kind="secondary"] p {
     margin: 0 !important;
 }
 
-/* 📱 4열 필터 버튼 글자 깨짐 완전 차단 */
+/* 📱 4열 필터 버튼 글자 깨짐 완전 차단 및 오버플로우 말줄임표 처리 */
 div:has(> div > .filter-buttons-marker) ~ div div[data-testid="stColumn"] div.stButton > button,
 div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button {
     height: 38px !important;
@@ -454,16 +439,18 @@ div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stBu
 }
 div:has(> div > .filter-buttons-marker) ~ div div[data-testid="stColumn"] div.stButton > button p,
 div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button p {
-    font-size: 9.5px !important;
+    font-size: 10px !important;
     line-height: 1.15 !important;
-    white-space: nowrap !important; /* 모바일 두 줄 강제 단절 해결 */
+    white-space: nowrap !important; 
+    overflow: hidden !important;
+    text-overflow: ellipsis !important; /* 가로폭 부족 시 자동으로 말줄임(...) 처리 */
 }
 
 /* 소형 기기 대상 필터 글씨 크기 자동 핏 */
 @media (max-width: 380px) {
     div:has(> div > .filter-buttons-marker) ~ div div[data-testid="stColumn"] div.stButton > button p,
     div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button p {
-        font-size: 8px !important;
+        font-size: 8.5px !important;
     }
 }
 
@@ -506,42 +493,6 @@ div[data-testid="column"] div.stButton > button p {
     word-break: keep-all;
     overflow-wrap: break-word;
     line-height: 1.3;
-}
-
-/* 📱 상단 고정 상태 바 */
-.ios-status-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed !important;
-    background-color: #FFFFFF !important;
-    padding: 10px 24px 8px 24px;
-    z-index: 1000000 !important;
-    pointer-events: none;
-    border-bottom: 1px solid #EFF1FE;
-    height: 47px;
-    box-sizing: border-box;
-}
-
-@media (min-width: 450px) {
-    .ios-status-bar {
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        width: 430px !important;
-        max-width: 430px !important;
-        right: auto !important;
-        top: 40px !important;
-        border-top-left-radius: 40px !important;
-        border-top-right-radius: 40px !important;
-        border-left: 1px solid #EFF1FE !important;
-        border-right: 1px solid #EFF1FE !important;
-    }
-}
-
-@media (max-width: 450px) {
-    .ios-status-bar {
-        display: none !important;
-    }
 }
 
 .nav-bar-anchor {
@@ -748,19 +699,6 @@ div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] div[
     margin-bottom: 24px;
 }
 </style>
-""", unsafe_allow_html=True)
-
-# 📱 고정형 기기 상단 상태 바 배치 (Dart 오리지널 디자인 반영)
-st.markdown("""
-<div class="ios-status-bar">
-    <div class="ios-status-time">9:41</div>
-    <div style="width: 100px; height: 26px; background-color: #000000; border-radius: 15px; position: absolute; left: 50%; transform: translateX(-50%);"></div>
-    <div style="display: flex; align-items: center; gap: 6px;">
-        <svg width="17" height="11" viewBox="0 0 17 11" fill="#1E202C"><path d="M2 3h1v5H2zm3-2h1v7H5zm3-1h1v8H8zm3 2h1v6h-1zm3-2h1v8h-1z"/></svg>
-        <svg width="15" height="11" viewBox="0 0 15 11" fill="#1E202C"><path d="M7.5 1.5C4.8 1.5 2.4 2.7.8 4.6l6.7 6.1 6.7-6.1C12.6 2.7 10.2 1.5 7.5 1.5z"/></svg>
-        <svg width="22" height="11" viewBox="0 0 22 11" fill="none" stroke="#1E202C" stroke-width="1.2"><rect x="1" y="1" width="18" height="9" rx="2"/><rect x="3" y="3" width="11" height="5" rx="0.8" fill="#1E202C"/><path d="M21 4v3" stroke-linecap="round"/></svg>
-    </div>
-</div>
 """, unsafe_allow_html=True)
 
 # 🎨 [Onboarding Splash] 플래터 스타일 온보딩 (Glow 후광 및 오버랩 물결 SVG 구현)
@@ -1558,19 +1496,19 @@ elif st.session_state.current_tab == "비교":
     
     col_f1, col_f2, col_f3, col_f4 = st.columns(4)
     with col_f1:
-        if st.button("₩ 월세 60 이하", key="fl_rent_btn", type="primary" if st.session_state.fl_rent else "secondary"):
+        if st.button("월세 ≤60", key="fl_rent_btn", type="primary" if st.session_state.fl_rent else "secondary"):
             st.session_state.fl_rent = not st.session_state.fl_rent
             st.rerun()
     with col_f2:
-        if st.button("🛡️ 보안 80+", key="fl_sec_btn", type="primary" if st.session_state.fl_sec else "secondary"):
+        if st.button("보안 80+", key="fl_sec_btn", type="primary" if st.session_state.fl_sec else "secondary"):
             st.session_state.fl_sec = not st.session_state.fl_sec
             st.rerun()
     with col_f3:
-        if st.button("☀️ 채광 70+", key="fl_light_btn", type="primary" if st.session_state.fl_light else "secondary"):
+        if st.button("채광 70+", key="fl_light_btn", type="primary" if st.session_state.fl_light else "secondary"):
             st.session_state.fl_light = not st.session_state.fl_light
             st.rerun()
     with col_f4:
-        if st.button("🔊 소음 낮음", key="fl_noise_btn", type="primary" if st.session_state.fl_noise else "secondary"):
+        if st.button("소음 낮음", key="fl_noise_btn", type="primary" if st.session_state.fl_noise else "secondary"):
             st.session_state.fl_noise = not st.session_state.fl_noise
             st.rerun()
             
