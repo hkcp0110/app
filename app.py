@@ -240,8 +240,8 @@ html, body, [data-testid="stAppViewContainer"] {
         overflow-y: auto !important;
         overflow-x: hidden !important;
         margin: 40px auto !important;
-        /* 💡 데스크톱 모달 내부 하단 여백 확대 (네비 바 간섭 배제) */
-        padding: 32px 20px 160px 20px !important; 
+        /* 💡 데스크톱 모달 내부 하단 여백을 플로팅 내비 영역 크기에 맞게 130px로 최적화 */
+        padding: 32px 20px 130px 20px !important; 
         border: 12px solid #1E202C !important;
         border-radius: 52px !important;
         box-shadow: 0 25px 60px rgba(0,0,0,0.65) !important;
@@ -251,7 +251,7 @@ html, body, [data-testid="stAppViewContainer"] {
     }
 }
 
-/* 📱 모바일 실기기 접속 대응 (여백 및 배경 색상 완벽 피팅) */
+/* 📱 모바일 실기기 접속 대응 */
 @media (max-width: 450px) {
     html, body, 
     [data-testid="stAppViewContainer"], 
@@ -272,8 +272,8 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        /* 💡 모바일 화면 하단에 180px의 대형 안전 패딩을 제공하여 컨텐츠 스크롤이 확실히 위로 올라오도록 설계 */
-        padding: 24px 12px 180px 12px !important; 
+        /* 💡 모바일 화면 하단 여백을 대형 공백이 아닌 플로팅 바 및 배지 영역 크기(약 120px)에 맞춤 설정 */
+        padding: 24px 12px 120px 12px !important; 
         position: relative !important;
         box-sizing: border-box !important;
         transform: none !important;
@@ -498,7 +498,6 @@ div[data-testid="column"] div.stButton > button p {
 
 /* ---------------------------------------------------------------------
    📱 하단 고정 내비게이션 바 디자인 고도화 (Floating Pill Style)
-   버튼의 위치를 위로 올리고 둥글게 만들어 하단 배지와의 간섭을 완전히 원천 차단합니다.
    --------------------------------------------------------------------- */
 div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
     position: fixed !important;
@@ -517,25 +516,25 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
     div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
         left: 50% !important;
         transform: translateX(-50%) !important;
-        width: 390px !important; /* 가상 디바이스 안쪽으로 폭 축소 조정 */
+        width: 390px !important; 
         max-width: 390px !important;
         right: auto !important;
-        bottom: 76px !important; /* 💡 가상 화면 프레임 안쪽 하단에 안정적으로 띄우기 */
+        bottom: 76px !important; 
         border-radius: 24px !important;
         padding: 10px 14px 10px 14px !important;
     }
 }
 
-/* 📱 모바일 환경의 Floating Pill 내비게이션 바 구현 (배지 회피의 핵심) */
+/* 📱 모바일 환경의 Floating Pill 내비게이션 바 구현 (배지 회피) */
 @media (max-width: 450px) {
     div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
         left: 16px !important;
         right: 16px !important;
-        /* 💡 bottom 값을 54px로 끌어올려 하단 우측 배지 위에 깔끔하게 띄우도록 설정 */
+        /* 💡 bottom 값을 54px로 유지하여 하단 우측 배지와의 간섭을 회피합니다 */
         bottom: 54px !important; 
-        width: calc(100% - 32px) !important; /* 좌우 마진 분량을 뺀 유동 너비 */
+        width: calc(100% - 32px) !important; 
         transform: none !important;
-        border-radius: 24px !important; /* 모서리를 둥글게 다듬어 세련된 플로팅 카드로 구현 */
+        border-radius: 24px !important; 
         padding: 10px 12px 10px 12px !important;
     }
     
