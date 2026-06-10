@@ -200,6 +200,23 @@ footer { display: none !important; visibility: hidden !important; }
 [data-testid="stToolbar"] { display: none !important; }
 [data-testid="collapsedControl"] { display: none !important; } /* 사이드바 화살표 원천 차단 */
 
+/* 🚫 모바일 하단 우측 스트림릿 배포 로고(종이비행기) 및 디버그 버튼(Manage App) 완전히 가림 */
+div[data-testid="stStatusWidget"],
+div[class*="viewerBadge"],
+div[class*="styles_viewerBadge"],
+div[class*="embeddedAppMetaInfoBar"],
+.viewerBadge_container,
+[class^="viewerBadge_container"],
+.stAppDeployButton,
+.stDeployButton {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: #0F0F1A !important;
