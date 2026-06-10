@@ -269,7 +269,7 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 24px 12px 120px 12px !important; /* 바닥 메뉴 여유분 확보 */
+        padding: 24px 12px 180px 12px !important; /* 바닥 버튼 크기를 감안하여 스크롤 여백 높이를 기존 120px에서 180px로 확대 */
         border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
