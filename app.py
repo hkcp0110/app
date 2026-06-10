@@ -200,17 +200,6 @@ footer { display: none !important; visibility: hidden !important; }
 [data-testid="stToolbar"] { display: none !important; }
 [data-testid="collapsedControl"] { display: none !important; } /* 사이드바 화살표 원천 차단 */
 
-/* 추가: 배포(Deploy) 버튼, 호스팅 배지, 데브 상태/메뉴 아이콘 가리기 */
-.stAppDeployButton,
-.stDeployButton,
-[data-testid="stStatusWidget"],
-#stDecoration,
-div[class^="viewerBadge_container"],
-iframe[title="Managed App Viewer Menu"] {
-    display: none !important;
-    visibility: hidden !important;
-}
-
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: #0F0F1A !important;
@@ -280,7 +269,8 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 24px 12px 120px 12px !important; /* 바닥 메뉴 여유분 확보 */
+        /* 개선: 맨 아래까지 내렸을 때 충분한 공백을 확보하기 위해 하단 패딩을 120px에서 180px로 확대 */
+        padding: 24px 12px 180px 12px !important; 
         border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
@@ -540,15 +530,17 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
 }
 
 @media (max-width: 450px) {
+    /* 개선: 모바일 뷰포트에서 메뉴바 전체를 75px 위로 띄우고 플로팅 카드로 세련되게 포지셔닝 */
     div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: 100% !important; /* 수평 스크롤 방지 */
-        transform: none !important; /* 데스크톱용 트랜스폼 중앙 정렬 오버라이드하여 좌측 치우침 해결 */
-        border-radius: 0 !important;
-        border: none !important;
-        border-top: 1px solid #EFF1FE !important;
+        left: 12px !important;
+        right: 12px !important;
+        bottom: 75px !important; /* Streamlit 디벨로퍼 마크(약 50px 높이) 위로 안전하게 이동 */
+        width: calc(100% - 24px) !important; /* 좌우 마진 12px씩 배분 */
+        transform: none !important;
+        border-radius: 20px !important; /* 플로팅 느낌을 주는 둥근 라운딩 */
+        border: 1px solid #EFF1FE !important;
+        box-shadow: 0 10px 30px rgba(47, 73, 209, 0.12) !important; /* 세련된 하단 그림자 효과 */
+        padding: 8px 10px 10px 10px !important;
     }
     
     /* 하단 내비게이션 컬럼 균등 너비 배분 호환 보장 */
@@ -620,7 +612,7 @@ div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] butt
     font-size: 11px !important;
 }
 
-/* 네비게이션 탭 아이콘 1:1 바인닝 */
+/* 네비게이션 탭 아이콘 1:1 바인딩 */
 div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button::before {
     content: "" !important;
     display: inline-block !important;
