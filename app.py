@@ -269,7 +269,7 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 24px 12px 160px 12px !important; /* 바닥 메뉴 여유분 확보 (하단바 두께에 대응하여 160px로 상향 조정) */
+        padding: 24px 12px 120px 12px !important; /* 바닥 메뉴 여유분 확보 */
         border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
@@ -529,20 +529,15 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
 }
 
 @media (max-width: 450px) {
-    /* 📱 모바일 네비게이션 가이드: 흰 판넬은 바닥끝까지 완전히 밀착해서 깔끔하게 내리고, */
-    /* 내부 버튼 컴포넌트만 위로 올려서 네이버/카카오 등의 모바일 브라우저 퀵오버레이 간섭을 회피합니다. */
     div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
         left: 0 !important;
         right: 0 !important;
-        bottom: 0 !important; /* 바닥 끝까지 완벽 밀착 */
-        width: 100% !important; /* 좌우 빈틈 차단 */
-        transform: none !important; /* 좌우 왜곡 복원 */
-        border-radius: 0 !important; /* 밀착형 디자인으로 사각 코너 유지 */
+        bottom: 0 !important;
+        width: 100% !important; /* 수평 스크롤 방지 */
+        transform: none !important; /* 데스크톱용 트랜스폼 중앙 정렬 오버라이드하여 좌측 치우침 해결 */
+        border-radius: 0 !important;
         border: none !important;
-        border-top: 1.5px solid #EFF1FE !important;
-        /* 핵심: 바닥 패딩(padding-bottom)을 52px로 주어 내부의 가이드, 체크, 리포트, 비교 버튼들을 수직으로 올려 정렬합니다. */
-        padding: 10px 14px 52px 14px !important; 
-        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.04) !important;
+        border-top: 1px solid #EFF1FE !important;
     }
     
     /* 하단 내비게이션 컬럼 균등 너비 배분 호환 보장 */
