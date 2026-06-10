@@ -200,23 +200,6 @@ footer { display: none !important; visibility: hidden !important; }
 [data-testid="stToolbar"] { display: none !important; }
 [data-testid="collapsedControl"] { display: none !important; } /* 사이드바 화살표 원천 차단 */
 
-/* 최대한 하단 배지를 숨기기 위한 CSS 폴백 */
-div[data-testid="stStatusWidget"],
-div[class*="viewerBadge"],
-div[class*="styles_viewerBadge"],
-div[class*="embeddedAppMetaInfoBar"],
-.viewerBadge_container,
-[class^="viewerBadge_container"],
-.stAppDeployButton,
-.stDeployButton {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    width: 0 !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: #0F0F1A !important;
@@ -240,8 +223,8 @@ html, body, [data-testid="stAppViewContainer"] {
         overflow-y: auto !important;
         overflow-x: hidden !important;
         margin: 40px auto !important;
-        /* 💡 데스크톱 모달 내부 하단 여백을 플로팅 내비 영역 크기에 맞게 130px로 최적화 */
-        padding: 32px 20px 130px 20px !important; 
+        /* 💡 데스크톱 모달 내부 하단 여백 설정 (하단 내비 바 크기 수준) */
+        padding: 32px 20px 120px 20px !important; 
         border: 12px solid #1E202C !important;
         border-radius: 52px !important;
         box-shadow: 0 25px 60px rgba(0,0,0,0.65) !important;
@@ -272,7 +255,7 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        /* 💡 모바일 화면 하단 여백을 대형 공백이 아닌 플로팅 바 및 배지 영역 크기(약 120px)에 맞춤 설정 */
+        /* 💡 모바일 화면 하단 여백을 대형 공백이 아닌 메뉴 바 총 높이(약 120px)에 정밀하게 맞춰 최적화 */
         padding: 24px 12px 120px 12px !important; 
         position: relative !important;
         box-sizing: border-box !important;
@@ -497,45 +480,49 @@ div[data-testid="column"] div.stButton > button p {
 }
 
 /* ---------------------------------------------------------------------
-   📱 하단 고정 내비게이션 바 디자인 고도화 (Floating Pill Style)
+   📱 하단 고정 내비게이션 바 디자인 (바닥 밀착형 구조)
    --------------------------------------------------------------------- */
 div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
     position: fixed !important;
     background-color: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: blur(25px) !important;
-    box-shadow: 0 10px 32px rgba(47, 73, 209, 0.15) !important;
-    border: 1.5px solid #EFF1FE !important;
+    border-top: 1px solid #EFF1FE !important;
     z-index: 1000000 !important;
     margin: 0 !important;
     display: flex !important;
     justify-content: space-around !important;
 }
 
-/* 💻 데스크톱 환경의 내비게이션 바 위치 최적화 */
+/* 💻 데스크톱 가상 화면 프레임 정렬 */
 @media (min-width: 450px) {
     div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
         left: 50% !important;
         transform: translateX(-50%) !important;
-        width: 390px !important; 
-        max-width: 390px !important;
+        width: 430px !important;
+        max-width: 430px !important;
         right: auto !important;
-        bottom: 76px !important; 
-        border-radius: 24px !important;
-        padding: 10px 14px 10px 14px !important;
+        bottom: 40px !important;
+        border-bottom-left-radius: 40px !important;
+        border-bottom-right-radius: 40px !important;
+        border-left: 1px solid #EFF1FE !important;
+        border-right: 1px solid #EFF1FE !important;
+        padding: 10px 14px 20px 14px !important;
     }
 }
 
-/* 📱 모바일 환경의 Floating Pill 내비게이션 바 구현 (배지 회피) */
+/* 📱 모바일 환경 바닥 밀착 및 버튼 하단 여백 부여 (배지 가림 회피의 핵심) */
 @media (max-width: 450px) {
     div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
-        left: 16px !important;
-        right: 16px !important;
-        /* 💡 bottom 값을 54px로 유지하여 하단 우측 배지와의 간섭을 회피합니다 */
-        bottom: 54px !important; 
-        width: calc(100% - 32px) !important; 
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important; 
         transform: none !important;
-        border-radius: 24px !important; 
-        padding: 10px 12px 10px 12px !important;
+        border-radius: 0 !important;
+        border: none !important;
+        border-top: 1px solid #EFF1FE !important;
+        /* 💡 핵심: 메뉴 자체는 아래 밀착하고 버튼 아래에 '배지 높이 만큼의 공백(50px)'을 패딩으로 주어 버튼을 배지 위로 정렬 */
+        padding: 10px 14px 50px 14px !important; 
     }
     
     /* 하단 내비게이션 컬럼 균등 너비 배분 호환 보장 */
@@ -544,6 +531,11 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
         flex: 1 1 0% !important;
         width: 25% !important;
         min-width: 0 !important;
+    }
+    
+    /* 모바일 기기 가상 터치 바 표시용 요소를 완전 제거하여 깔끔한 레이아웃 보장 */
+    div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"]::after {
+        display: none !important;
     }
 }
 
