@@ -269,7 +269,7 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 24px 12px 120px 12px !important; /* 바닥 메뉴 여유분 확보 */
+        padding: 24px 12px 180px 12px !important; /* 바닥 메뉴 및 공백 여유분 대폭 확보 (기존 120px -> 180px) */
         border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
@@ -538,6 +538,7 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
         border-radius: 0 !important;
         border: none !important;
         border-top: 1px solid #EFF1FE !important;
+        padding-bottom: 75px !important; /* 📱 중요: 마크 및 시스템 바로부터 가려지지 않도록 하단 내부 여백(공백) 추가 */
     }
     
     /* 하단 내비게이션 컬럼 균등 너비 배분 호환 보장 */
