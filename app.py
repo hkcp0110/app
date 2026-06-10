@@ -223,7 +223,7 @@ html, body, [data-testid="stAppViewContainer"] {
         overflow-y: auto !important;
         overflow-x: hidden !important;
         margin: 40px auto !important;
-        padding: 32px 20px 150px 20px !important; /* 데스크톱 모의 프레임 내 하단 여백 추가 확보 */
+        padding: 32px 20px 100px 20px !important; /* 데스크톱 기본 모의 프레임 패딩 복구 */
         border: 12px solid #1E202C !important;
         border-radius: 52px !important;
         box-shadow: 0 25px 60px rgba(0,0,0,0.65) !important;
@@ -268,7 +268,7 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 24px 12px 160px 12px !important; /* 모바일 환경에서 위로 올라간 캡슐 메뉴를 고려해 본문 아래쪽 마진 최적화 */
+        padding: 24px 12px 100px 12px !important; /* 바닥 버튼 영역과 겹치지 않는 기본 모바일 패딩 */
         position: relative !important;
         box-sizing: border-box !important;
         transform: none !important;
@@ -511,7 +511,7 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
         width: 430px !important;
         max-width: 430px !important;
         right: auto !important;
-        bottom: 40px !important;
+        bottom: 40px !important; /* 데스크톱 프레임 하단 위치 */
         border-bottom-left-radius: 40px !important;
         border-bottom-right-radius: 40px !important;
         border-left: 1px solid #EFF1FE !important;
@@ -522,14 +522,15 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
 
 @media (max-width: 450px) {
     div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
-        left: 12px !important;
-        right: 12px !important;
-        bottom: 75px !important; /* 모바일 브라우저(웨일, 카카오톡 등) 하단 퀵 버튼에 가려지지 않도록 높이 상향 고정 */
-        width: calc(100% - 24px) !important; /* 좌우 여백을 준 공중부양 캡슐 스타일 */
-        border-radius: 20px !important;
-        border: 1.5px solid #EFF1FE !important;
-        box-shadow: 0 10px 30px rgba(47, 73, 209, 0.12) !important;
-        padding: 8px 10px 12px 10px !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important; /* 모바일 원래 위치(바닥 고정) 복구 */
+        width: 100% !important;
+        border-radius: 0 !important;
+        border: none !important;
+        border-top: 1px solid #EFF1FE !important;
+        box-shadow: none !important;
+        padding: 10px 14px 26px 14px !important;
     }
     
     /* 하단 내비게이션 컬럼 균등 너비 배분 호환 보장 */
@@ -951,7 +952,7 @@ elif st.session_state.current_tab == "체크":
             
             toilet_opts = ["매우 원활", "보통", "불량"]
             toilet_idx = toilet_opts.index(st.session_state.chk_toilet) if st.session_state.chk_toilet in toilet_opts else 0
-            st.session_state.chk_toilet = st.selectbox("변기 수압 및 물내림 상태", options=toilet_opts, index=toilet_idx)
+            st.session_state.chk_toilet = st.selectbox("변기 수압 및물내림 상태", options=toilet_opts, index=toilet_idx)
             
             st.session_state.chk_sim_drainage = st.checkbox("세면대와 샤워기를 동시 작동 시 수압 저하가 심한가요?", value=st.session_state.chk_sim_drainage)
 
@@ -1649,6 +1650,9 @@ elif st.session_state.current_tab == "비교":
 # ---------------------------------------------------------------------
 # 📱 하단 고정 내비게이션 바 레이아웃 출력
 # ---------------------------------------------------------------------
+# 고정 버튼 위로 콘텐츠가 원활히 올라올 수 있도록 스크롤이 가능한 투명 공백 추가
+st.markdown("<div style='height: 150px; width: 100%; pointer-events: none;'></div>", unsafe_allow_html=True)
+
 st.markdown('<div class="nav-bar-anchor"></div>', unsafe_allow_html=True)
 nav_bar_cols = st.columns(4)
 
