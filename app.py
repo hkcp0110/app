@@ -223,7 +223,7 @@ html, body, [data-testid="stAppViewContainer"] {
         overflow-y: auto !important;
         overflow-x: hidden !important;
         margin: 40px auto !important;
-        padding: 32px 20px 100px 20px !important; /* 데스크톱 기본 모의 프레임 패딩 복구 */
+        padding: 32px 20px 90px 20px !important; /* 가상 상태바 제거에 따라 상단 패딩 축소 조정 */
         border: 12px solid #1E202C !important;
         border-radius: 52px !important;
         box-shadow: 0 25px 60px rgba(0,0,0,0.65) !important;
@@ -249,6 +249,7 @@ html, body, [data-testid="stAppViewContainer"] {
 
 /* 📱 모바일 실기기 접속 대응 (여백 및 배경 색상 완벽 피팅) */
 @media (max-width: 450px) {
+    /* 모바일 환경에서는 3D 프레임이 무너지므로 전체 배경을 깔끔한 라이트 블루/그레이로 통합하여 아래쪽 검은 영역을 완전히 차단 */
     html, body, 
     [data-testid="stAppViewContainer"], 
     section.main, 
@@ -268,10 +269,13 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 24px 12px 100px 12px !important; /* 바닥 버튼 영역과 겹치지 않는 기본 모바일 패딩 */
+        padding: 24px 12px 120px 12px !important; /* 바닥 메뉴 여유분 확보 */
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
         position: relative !important;
         box-sizing: border-box !important;
-        transform: none !important;
+        transform: none !important; /* 모바일에서 fixed 원소 정렬 왜곡을 막기 위해 transform 초기화 */
     }
 }
 
@@ -284,6 +288,7 @@ html, body, [data-testid="stAppViewContainer"] {
         gap: 8px !important;
     }
     
+    /* stColumn과 column 두 가지 스트림릿 버전에 안전 호환되도록 동시 타겟팅 (너비 밀림 현상 완전 해결) */
     div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"],
     div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
         min-width: 0 !important;
@@ -291,18 +296,21 @@ html, body, [data-testid="stAppViewContainer"] {
         flex: 1 1 0% !important;
     }
     
+    /* 1단계 기본 조건 입력창: 첫 번째 컬럼(라벨) 가로 폭 지정 (라벨 85px 고정) */
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="stColumn"]:nth-child(1),
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="column"]:nth-child(1) {
         flex: 0 0 85px !important;
         min-width: 85px !important;
     }
     
+    /* 1단계 기본 조건 입력창: 세 번째 컬럼(단위 배지 만원, %, 평) 가로 폭 지정 (배지 65px 고정) */
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="stColumn"]:nth-child(3),
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="column"]:nth-child(3) {
         flex: 0 0 65px !important;
         min-width: 65px !important;
     }
     
+    /* 3단계 리포트 탭: 상단 셀렉트박스와 삭제 버튼 가로 정렬 비율 최적화 (삭제 버튼 52px 고정) */
     div[data-testid="stHorizontalBlock"]:has([data-testid="stSelectbox"]) > div[data-testid="stColumn"]:nth-child(2),
     div[data-testid="stHorizontalBlock"]:has([data-testid="stSelectbox"]) > div[data-testid="column"]:nth-child(2) {
         flex: 0 0 52px !important;
@@ -511,7 +519,7 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
         width: 430px !important;
         max-width: 430px !important;
         right: auto !important;
-        bottom: 40px !important; /* 데스크톱 프레임 하단 위치 */
+        bottom: 40px !important;
         border-bottom-left-radius: 40px !important;
         border-bottom-right-radius: 40px !important;
         border-left: 1px solid #EFF1FE !important;
@@ -524,13 +532,12 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
     div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
         left: 0 !important;
         right: 0 !important;
-        bottom: 0 !important; /* 모바일 원래 위치(바닥 고정) 복구 */
-        width: 100% !important;
+        bottom: 0 !important;
+        width: 100% !important; /* 수평 스크롤 방지 */
+        transform: none !important; /* 데스크톱용 트랜스폼 중앙 정렬 오버라이드하여 좌측 치우침 해결 */
         border-radius: 0 !important;
         border: none !important;
         border-top: 1px solid #EFF1FE !important;
-        box-shadow: none !important;
-        padding: 10px 14px 26px 14px !important;
     }
     
     /* 하단 내비게이션 컬럼 균등 너비 배분 호환 보장 */
@@ -541,6 +548,7 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
         min-width: 0 !important;
     }
     
+    /* 모바일 기기 화면에서는 이미 탑재된 OS 하단 바가 있으므로 가상 터치 표시 바를 숨김 처리합니다. */
     div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"]::after {
         display: none !important;
     }
@@ -952,7 +960,7 @@ elif st.session_state.current_tab == "체크":
             
             toilet_opts = ["매우 원활", "보통", "불량"]
             toilet_idx = toilet_opts.index(st.session_state.chk_toilet) if st.session_state.chk_toilet in toilet_opts else 0
-            st.session_state.chk_toilet = st.selectbox("변기 수압 및물내림 상태", options=toilet_opts, index=toilet_idx)
+            st.session_state.chk_toilet = st.selectbox("변기 수압 및 물내림 상태", options=toilet_opts, index=toilet_idx)
             
             st.session_state.chk_sim_drainage = st.checkbox("세면대와 샤워기를 동시 작동 시 수압 저하가 심한가요?", value=st.session_state.chk_sim_drainage)
 
@@ -1650,9 +1658,6 @@ elif st.session_state.current_tab == "비교":
 # ---------------------------------------------------------------------
 # 📱 하단 고정 내비게이션 바 레이아웃 출력
 # ---------------------------------------------------------------------
-# 고정 버튼 위로 콘텐츠가 원활히 올라올 수 있도록 스크롤이 가능한 투명 공백 추가
-st.markdown("<div style='height: 150px; width: 100%; pointer-events: none;'></div>", unsafe_allow_html=True)
-
 st.markdown('<div class="nav-bar-anchor"></div>', unsafe_allow_html=True)
 nav_bar_cols = st.columns(4)
 
