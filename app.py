@@ -269,7 +269,7 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 24px 12px 180px 12px !important; /* 바닥 메뉴 및 공백 여유분 대폭 확보 (기존 120px -> 180px) */
+        padding: 24px 12px 140px 12px !important; /* 바닥 플로팅 메뉴 영역만큼의 여유분 추가 확보 */
         border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
@@ -529,16 +529,17 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
 }
 
 @media (max-width: 450px) {
+    /* 📱 모바일 오버레이 방지 핏: 하단 밀착 대신 공중에 띄우는 플로팅 도크(Floating Dock) 방식으로 전환 */
     div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: 100% !important; /* 수평 스크롤 방지 */
-        transform: none !important; /* 데스크톱용 트랜스폼 중앙 정렬 오버라이드하여 좌측 치우침 해결 */
-        border-radius: 0 !important;
-        border: none !important;
-        border-top: 1px solid #EFF1FE !important;
-        padding-bottom: 75px !important; /* 📱 중요: 마크 및 시스템 바로부터 가려지지 않도록 하단 내부 여백(공백) 추가 */
+        left: 16px !important;
+        right: 16px !important;
+        bottom: 28px !important; /* 브라우저 퀵 링크나 하단 네비게이션과 겹치지 않게 위로 충분히 고정 */
+        width: calc(100% - 32px) !important; /* 양측 마진 확보 */
+        transform: none !important; /* 가변 모바일 해상도 중앙 유지 */
+        border-radius: 20px !important; /* 미려한 라운딩 디자인 적용 */
+        border: 1.5px solid #EFF1FE !important;
+        box-shadow: 0 10px 30px rgba(47, 73, 209, 0.15) !important; /* 그림자를 줘 가독성 강화 */
+        padding: 8px 10px !important;
     }
     
     /* 하단 내비게이션 컬럼 균등 너비 배분 호환 보장 */
