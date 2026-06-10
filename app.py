@@ -249,7 +249,6 @@ html, body, [data-testid="stAppViewContainer"] {
 
 /* 📱 모바일 실기기 접속 대응 (여백 및 배경 색상 완벽 피팅) */
 @media (max-width: 450px) {
-    /* 모바일 환경에서는 3D 프레임이 무너지므로 전체 배경을 깔끔한 라이트 블루/그레이로 통합하여 아래쪽 검은 영역을 완전히 차단 */
     html, body, 
     [data-testid="stAppViewContainer"], 
     section.main, 
@@ -269,10 +268,10 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 24px 12px 180px 12px !important; /* 모바일 환경에서 하단 메뉴와 겹치지 않게 바닥 여유분 대폭 확보 */
+        padding: 24px 12px 160px 12px !important; /* 모바일 환경에서 위로 올라간 캡슐 메뉴를 고려해 본문 아래쪽 마진 최적화 */
         position: relative !important;
         box-sizing: border-box !important;
-        transform: none !important; /* 모바일에서 fixed 원소 정렬 왜곡을 막기 위해 transform 초기화 */
+        transform: none !important;
     }
 }
 
@@ -285,7 +284,6 @@ html, body, [data-testid="stAppViewContainer"] {
         gap: 8px !important;
     }
     
-    /* stColumn과 column 두 가지 스트림릿 버전에 안전 호환되도록 동시 타겟팅 (너비 밀림 현상 완전 해결) */
     div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"],
     div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
         min-width: 0 !important;
@@ -293,21 +291,18 @@ html, body, [data-testid="stAppViewContainer"] {
         flex: 1 1 0% !important;
     }
     
-    /* 1단계 기본 조건 입력창: 첫 번째 컬럼(라벨) 가로 폭 지정 (라벨 85px 고정) */
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="stColumn"]:nth-child(1),
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="column"]:nth-child(1) {
         flex: 0 0 85px !important;
         min-width: 85px !important;
     }
     
-    /* 1단계 기본 조건 입력창: 세 번째 컬럼(단위 배지 만원, %, 평) 가로 폭 지정 (배지 65px 고정) */
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="stColumn"]:nth-child(3),
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="column"]:nth-child(3) {
         flex: 0 0 65px !important;
         min-width: 65px !important;
     }
     
-    /* 3단계 리포트 탭: 상단 셀렉트박스와 삭제 버튼 가로 정렬 비율 최적화 (삭제 버튼 52px 고정) */
     div[data-testid="stHorizontalBlock"]:has([data-testid="stSelectbox"]) > div[data-testid="stColumn"]:nth-child(2),
     div[data-testid="stHorizontalBlock"]:has([data-testid="stSelectbox"]) > div[data-testid="column"]:nth-child(2) {
         flex: 0 0 52px !important;
@@ -527,14 +522,14 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
 
 @media (max-width: 450px) {
     div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: 100% !important; /* 수평 스크롤 방지 */
-        transform: none !important; /* 데스크톱용 트랜스폼 중앙 정렬 오버라이드하여 좌측 치우침 해결 */
-        border-radius: 0 !important;
-        border: none !important;
-        border-top: 1px solid #EFF1FE !important;
+        left: 12px !important;
+        right: 12px !important;
+        bottom: 75px !important; /* 모바일 브라우저(웨일, 카카오톡 등) 하단 퀵 버튼에 가려지지 않도록 높이 상향 고정 */
+        width: calc(100% - 24px) !important; /* 좌우 여백을 준 공중부양 캡슐 스타일 */
+        border-radius: 20px !important;
+        border: 1.5px solid #EFF1FE !important;
+        box-shadow: 0 10px 30px rgba(47, 73, 209, 0.12) !important;
+        padding: 8px 10px 12px 10px !important;
     }
     
     /* 하단 내비게이션 컬럼 균등 너비 배분 호환 보장 */
@@ -545,7 +540,6 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
         min-width: 0 !important;
     }
     
-    /* 모바일 기기 화면에서는 이미 탑재된 OS 하단 바가 있으므로 가상 터치 표시 바를 숨김 처리합니다. */
     div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"]::after {
         display: none !important;
     }
@@ -1655,9 +1649,6 @@ elif st.session_state.current_tab == "비교":
 # ---------------------------------------------------------------------
 # 📱 하단 고정 내비게이션 바 레이아웃 출력
 # ---------------------------------------------------------------------
-# 고정형 하단 바가 콘텐츠를 가리는 현상을 방지하기 위해 모바일 하단에 물리적인 스크롤 마진용 공백 추가
-st.markdown("<div style='height: 160px;'></div>", unsafe_allow_html=True)
-
 st.markdown('<div class="nav-bar-anchor"></div>', unsafe_allow_html=True)
 nav_bar_cols = st.columns(4)
 
