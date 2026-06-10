@@ -8,7 +8,6 @@ import math
 import csv
 import os
 import textwrap
-from streamlit.components.v1 import html  # 호스팅 배지 숨김 연동용 컴포넌트
 
 # 페이지 초기 구성
 st.set_page_config(
@@ -200,21 +199,6 @@ st.markdown("""
 footer { display: none !important; visibility: hidden !important; }
 [data-testid="stToolbar"] { display: none !important; }
 [data-testid="collapsedControl"] { display: none !important; } /* 사이드바 화살표 원천 차단 */
-[data-testid="stConnectionStatus"] { display: none !important; }
-
-/* 배포용 브랜딩 배지 및 관련 레이아웃 요소 강제 숨김 처리 */
-.viewerBadge_container__1QSob,
-.styles_viewerBadge__1yB5_,
-.viewerBadge_link__1S137,
-.viewerBadge_text__1JaDK,
-[data-testid="stStatusWidget"],
-footer,
-#MainMenu,
-header,
-.stDeployButton {
-    display: none !important;
-    visibility: hidden !important;
-}
 
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -239,7 +223,7 @@ html, body, [data-testid="stAppViewContainer"] {
         overflow-y: auto !important;
         overflow-x: hidden !important;
         margin: 40px auto !important;
-        padding: 32px 20px 90px 20px !important; /* 가상 상태바 영역을 지우고 깔끔하게 32px 여백 적용 */
+        padding: 32px 20px 90px 20px !important; /* 가상 상태바 제거에 따라 상단 패딩 축소 조정 */
         border: 12px solid #1E202C !important;
         border-radius: 52px !important;
         box-shadow: 0 25px 60px rgba(0,0,0,0.65) !important;
@@ -248,7 +232,7 @@ html, body, [data-testid="stAppViewContainer"] {
         transform: translate(0, 0) !important;
     }
     
-    div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"])::after {
+    div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"]::after {
         content: "" !important;
         position: absolute !important;
         bottom: 8px !important;
@@ -263,8 +247,17 @@ html, body, [data-testid="stAppViewContainer"] {
     }
 }
 
-/* 📱 모바일 실기기 접속 대응 */
+/* 📱 모바일 실기기 접속 대응 (여백 및 배경 색상 완벽 피팅) */
 @media (max-width: 450px) {
+    /* 모바일 환경에서는 3D 프레임이 무너지므로 전체 배경을 깔끔한 라이트 블루/그레이로 통합하여 아래쪽 검은 영역을 완전히 차단 */
+    html, body, 
+    [data-testid="stAppViewContainer"], 
+    section.main, 
+    [data-testid="stApp"],
+    .stApp {
+        background-color: #F8F9FD !important;
+    }
+
     .block-container,
     [data-testid="stMainBlockContainer"],
     [data-testid="stAppViewBlockContainer"],
@@ -276,13 +269,13 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 24px 12px 260px 12px !important; /* 모바일 하단 스크롤 여유 공간 확장 */
+        padding: 24px 12px 120px 12px !important; /* 바닥 메뉴 여유분 확보 */
         border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
         position: relative !important;
         box-sizing: border-box !important;
-        transform: translate(0, 0) !important;
+        transform: none !important; /* 모바일에서 fixed 원소 정렬 왜곡을 막기 위해 transform 초기화 */
     }
 }
 
@@ -294,23 +287,31 @@ html, body, [data-testid="stAppViewContainer"] {
         align-items: stretch !important;
         gap: 8px !important;
     }
+    
+    /* stColumn과 column 두 가지 스트림릿 버전에 안전 호환되도록 동시 타겟팅 (너비 밀림 현상 완전 해결) */
+    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"],
     div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
         min-width: 0 !important;
-        width: 100% !important;
+        width: auto !important; 
         flex: 1 1 0% !important;
     }
     
-    /* 1단계 기본 조건 입력창: 라벨과 입력 공간의 가로 비율 최적화 (라벨 85px 고정) */
+    /* 1단계 기본 조건 입력창: 첫 번째 컬럼(라벨) 가로 폭 지정 (라벨 85px 고정) */
+    div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="stColumn"]:nth-child(1),
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="column"]:nth-child(1) {
         flex: 0 0 85px !important;
+        min-width: 85px !important;
     }
     
-    /* 1단계 기본 조건 입력창: 단위 배지(만원, %) 가로 크기 최적화 (배지 65px 고정) */
-    div[data-testid="stHorizontalBlock"]:has(input) > div[data-testid="column"]:nth-child(2) {
+    /* 1단계 기본 조건 입력창: 세 번째 컬럼(단위 배지 만원, %, 평) 가로 폭 지정 (배지 65px 고정) */
+    div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="stColumn"]:nth-child(3),
+    div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="column"]:nth-child(3) {
         flex: 0 0 65px !important;
+        min-width: 65px !important;
     }
     
     /* 3단계 리포트 탭: 상단 셀렉트박스와 삭제 버튼 가로 정렬 비율 최적화 (삭제 버튼 52px 고정) */
+    div[data-testid="stHorizontalBlock"]:has([data-testid="stSelectbox"]) > div[data-testid="stColumn"]:nth-child(2),
     div[data-testid="stHorizontalBlock"]:has([data-testid="stSelectbox"]) > div[data-testid="column"]:nth-child(2) {
         flex: 0 0 52px !important;
     }
@@ -428,35 +429,40 @@ div.stButton > button[kind="secondary"] p {
     margin: 0 !important;
 }
 
-/* 📱 4열 필터 버튼 가로 오버플로우 방지 및 안전 말줄임 처리 */
+/* 📱 4열 필터 버튼 글자 깨짐 완전 차단 및 오버플로우 말줄임표 처리 */
+div:has(> div > .filter-buttons-marker) ~ div div[data-testid="stColumn"] div.stButton > button,
 div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button {
     height: 38px !important;
     min-height: 38px !important;
     padding: 4px 1px !important;
     border-radius: 10px !important;
 }
+div:has(> div > .filter-buttons-marker) ~ div div[data-testid="stColumn"] div.stButton > button p,
 div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button p {
     font-size: 10px !important;
     line-height: 1.15 !important;
-    white-space: nowrap !important;
+    white-space: nowrap !important; 
     overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    text-overflow: ellipsis !important; /* 가로폭 부족 시 자동으로 말줄임(...) 처리 */
 }
 
 /* 소형 기기 대상 필터 글씨 크기 자동 핏 */
 @media (max-width: 380px) {
+    div:has(> div > .filter-buttons-marker) ~ div div[data-testid="stColumn"] div.stButton > button p,
     div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button p {
-        font-size: 8px !important;
+        font-size: 8.5px !important;
     }
 }
 
 /* 📱 다중 열 배치 버튼 찌그러짐 방지 통합 */
+div[data-testid="stColumn"] div.stButton > button,
 div[data-testid="column"] div.stButton > button {
     min-height: 44px !important;
     height: auto !important;
     border-radius: 12px !important;
     padding: 8px 10px !important;
 }
+div[data-testid="stColumn"] div.stButton > button p,
 div[data-testid="column"] div.stButton > button p {
     font-size: 13px !important;
     white-space: nowrap !important;
@@ -493,8 +499,8 @@ div[data-testid="column"] div.stButton > button p {
     display: none;
 }
 
-/* 하단 내비게이션 영역 고정 및 스타일 (st-key 기반 정밀 Targeting) */
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) {
+/* 하단 내비게이션 영역 고정 및 스타일 */
+div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
     position: fixed !important;
     background-color: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: blur(25px) !important;
@@ -507,13 +513,13 @@ div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) {
 }
 
 @media (min-width: 450px) {
-    div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) {
+    div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
         left: 50% !important;
         transform: translateX(-50%) !important;
         width: 430px !important;
         max-width: 430px !important;
         right: auto !important;
-        bottom: 95px !important; /* 높이 상향 조정 (75px -> 95px)으로 겹침 방지 극대화 */
+        bottom: 40px !important;
         border-bottom-left-radius: 40px !important;
         border-bottom-right-radius: 40px !important;
         border-left: 1px solid #EFF1FE !important;
@@ -522,27 +528,34 @@ div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) {
     }
 }
 
-/* 📱 모바일 단말기 전용 알약형 플로팅 내비게이션 바 레이아웃 - 모바일 겹침 원천 방지 설계 */
 @media (max-width: 450px) {
-    div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) {
-        left: 3% !important;
-        right: 3% !important;
-        bottom: 145px !important; /* 바닥 구석의 왕관/플로팅 위젯에 가려지지 않게 여백을 과감히 더 올림 (110px -> 145px) */
-        width: 94% !important;
-        transform: none !important;
-        border-radius: 18px !important;
-        border: 1.5px solid #EFF1FE !important;
-        box-shadow: 0 8px 30px rgba(47, 73, 209, 0.15) !important;
+    div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important; /* 수평 스크롤 방지 */
+        transform: none !important; /* 데스크톱용 트랜스폼 중앙 정렬 오버라이드하여 좌측 치우침 해결 */
+        border-radius: 0 !important;
+        border: none !important;
+        border-top: 1px solid #EFF1FE !important;
+    }
+    
+    /* 하단 내비게이션 컬럼 균등 너비 배분 호환 보장 */
+    div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"],
+    div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+        flex: 1 1 0% !important;
+        width: 25% !important;
+        min-width: 0 !important;
     }
     
     /* 모바일 기기 화면에서는 이미 탑재된 OS 하단 바가 있으므로 가상 터치 표시 바를 숨김 처리합니다. */
-    div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"])::after {
+    div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"]::after {
         display: none !important;
     }
 }
 
 /* 📋 네비게이션 탭 내부 버튼 */
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button {
     height: 52px !important;
     min-height: 52px !important;
     max-height: 52px !important;
@@ -559,7 +572,7 @@ div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button {
     background: transparent !important;
 }
 
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button * {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button * {
     white-space: nowrap !important;
     word-break: keep-all !important;
     text-overflow: clip !important;
@@ -569,35 +582,35 @@ div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button *
 }
 
 /* 비활성 탭 (Secondary) 글자 색상 및 테두리 해제 */
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button:not([data-testid="stBaseButton-primary"]):not([kind="primary"]) {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button:not([data-testid="stBaseButton-primary"]):not([kind="primary"]) {
     background: transparent !important;
     border: none !important;
 }
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button:not([data-testid="stBaseButton-primary"]):not([kind="primary"]) p,
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button:not([data-testid="stBaseButton-primary"]):not([kind="primary"]) span,
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button:not([data-testid="stBaseButton-primary"]):not([kind="primary"]) {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button:not([data-testid="stBaseButton-primary"]):not([kind="primary"]) p,
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button:not([data-testid="stBaseButton-primary"]):not([kind="primary"]) span,
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button:not([data-testid="stBaseButton-primary"]):not([kind="primary"]) {
     color: #8D94B1 !important;
     font-size: 11px !important;
     font-weight: 700 !important;
 }
 
 /* 활성 탭 (Primary) 배경색 및 글자 색상 */
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button[kind="primary"],
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button[data-testid="stBaseButton-primary"] {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button[kind="primary"],
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button[data-testid="stBaseButton-primary"] {
     background-color: #EFF1FE !important;
     border: none !important;
 }
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button[kind="primary"] p,
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button[kind="primary"] span,
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button[data-testid="stBaseButton-primary"] p,
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button[data-testid="stBaseButton-primary"] span {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button[kind="primary"] p,
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button[kind="primary"] span,
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button[data-testid="stBaseButton-primary"] p,
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button[data-testid="stBaseButton-primary"] span {
     color: #2F49D1 !important;
     font-weight: 800 !important;
     font-size: 11px !important;
 }
 
 /* 네비게이션 탭 아이콘 1:1 바인딩 */
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button::before {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button::before {
     content: "" !important;
     display: inline-block !important;
     width: 20px !important;
@@ -606,28 +619,28 @@ div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) button::
     background-repeat: no-repeat !important;
     background-size: contain !important;
 }
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) div[data-testid="column"]:nth-child(1) button::before {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] div[data-testid="column"]:nth-child(1) button::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%238D94B1' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3C/svg%3E") !important;
 }
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) div[data-testid="column"]:nth-child(1) button[kind="primary"]::before {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] div[data-testid="column"]:nth-child(1) button[kind="primary"]::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%232F49D1' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3C/svg%3E") !important;
 }
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) div[data-testid="column"]:nth-child(2) button::before {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] div[data-testid="column"]:nth-child(2) button::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%238D94B1' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='8' y1='6' x2='21' y2='6'/%3E%3Cline x1='8' y1='12' x2='21' y2='12'/%3E%3Cline x1='8' y1='18' x2='21' y2='18'/%3E%3Cline x1='3' y1='6' x2='3.01' y2='6'/%3E%3Cline x1='3' y1='12' x2='3.01' y2='12'/%3E%3Cline x1='3' y1='18' x2='3.01' y2='18'/%3E%3C/svg%3E") !important;
 }
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) div[data-testid="column"]:nth-child(2) button[kind="primary"]::before {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] div[data-testid="column"]:nth-child(2) button[kind="primary"]::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%232F49D1' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='8' y1='6' x2='21' y2='6'/%3E%3Cline x1='8' y1='12' x2='21' y2='12'/%3E%3Cline x1='8' y1='18' x2='21' y2='18'/%3E%3Cline x1='3' y1='6' x2='3.01' y2='6'/%3E%3Cline x1='3' y1='12' x2='3.01' y2='12'/%3E%3Cline x1='3' y1='18' x2='3.01' y2='18'/%3E%3C/svg%3E") !important;
 }
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) div[data-testid="column"]:nth-child(3) button::before {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] div[data-testid="column"]:nth-child(3) button::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%238D94B1' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='20' x2='18' y2='10'/%3E%3Cline x1='12' y1='20' x2='12' y2='4'/%3E%3Cline x1='6' y1='20' x2='6' y2='14'/%3E%3C/svg%3E") !important;
 }
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) div[data-testid="column"]:nth-child(3) button[kind="primary"]::before {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] div[data-testid="column"]:nth-child(3) button[kind="primary"]::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%232F49D1' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='20' x2='18' y2='10'/%3E%3Cline x1='12' y1='20' x2='12' y2='4'/%3E%3Cline x1='6' y1='20' x2='6' y2='14'/%3E%3C/svg%3E") !important;
 }
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) div[data-testid="column"]:nth-child(4) button::before {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] div[data-testid="column"]:nth-child(4) button::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%238E94B1' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='16 3 21 8 16 13'/%3E%3Cline x1='21' y1='8' x2='9' y2='8'/%3E%3Cpolyline points='8 21 3 16 8 11'/%3E%3Cline x1='3' y1='16' x2='15' y2='16'/%3E%3C/svg%3E") !important;
 }
-div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-nav_btn_"]) div[data-testid="column"]:nth-child(4) button[kind="primary"]::before {
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] div[data-testid="column"]:nth-child(4) button[kind="primary"]::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%232F49D1' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='16 3 21 8 16 13'/%3E%3Cline x1='21' y1='8' x2='9' y2='8'/%3E%3Cpolyline points='8 21 3 16 8 11'/%3E%3Cline x1='3' y1='16' x2='15' y2='16'/%3E%3C/svg%3E") !important;
 }
 
@@ -893,18 +906,21 @@ elif st.session_state.current_tab == "체크":
             </div>
             """, unsafe_allow_html=True)
             
+            # 버그 수정: 중첩 st.columns 대신 하나의 3열 평면 컬럼(Flat columns)으로 배치하여 CSS 찌그러짐을 해결합니다.
             def styled_input_row(label, val_key, placeholder, suffix=None):
-                col_lbl, col_inp = st.columns([1.1, 2.9])
-                with col_lbl:
-                    st.markdown(f"<div style='margin-top: 14px; font-weight: bold; font-size: 14px; color: #4A4E69;'>{label}</div>", unsafe_allow_html=True)
-                with col_inp:
-                    if suffix:
-                        col_input_box, col_badge = st.columns([3.1, 0.9])
-                        with col_input_box:
-                            st.session_state[val_key] = st.text_input(label, value=st.session_state[val_key], placeholder=placeholder, label_visibility="collapsed", key=f"input_{val_key}")
-                        with col_badge:
-                            st.markdown(f"<div style='background-color: #EFF1FE; color: #2F49D1; font-weight: bold; font-size: 11.5px; border-radius: 12px; padding: 10px 0; margin-top: 4px; text-align: center; height: auto;'>{suffix}</div>", unsafe_allow_html=True)
-                    else:
+                if suffix:
+                    col_lbl, col_inp, col_badge = st.columns([1.1, 2.0, 0.9])
+                    with col_lbl:
+                        st.markdown(f"<div style='margin-top: 14px; font-weight: bold; font-size: 14px; color: #4A4E69;'>{label}</div>", unsafe_allow_html=True)
+                    with col_inp:
+                        st.session_state[val_key] = st.text_input(label, value=st.session_state[val_key], placeholder=placeholder, label_visibility="collapsed", key=f"input_{val_key}")
+                    with col_badge:
+                        st.markdown(f"<div style='background-color: #EFF1FE; color: #2F49D1; font-weight: bold; font-size: 11.5px; border-radius: 12px; padding: 10px 0; margin-top: 4px; text-align: center; height: auto;'>{suffix}</div>", unsafe_allow_html=True)
+                else:
+                    col_lbl, col_inp = st.columns([1.1, 2.9])
+                    with col_lbl:
+                        st.markdown(f"<div style='margin-top: 14px; font-weight: bold; font-size: 14px; color: #4A4E69;'>{label}</div>", unsafe_allow_html=True)
+                    with col_inp:
                         st.session_state[val_key] = st.text_input(label, value=st.session_state[val_key], placeholder=placeholder, label_visibility="collapsed", key=f"input_{val_key}")
 
             styled_input_row("매물 별칭", "chk_name", "예: 신촌 원룸 A")
@@ -1231,7 +1247,7 @@ elif st.session_state.current_tab == "체크":
                     "parking_status": st.session_state.chk_parking,
                     "trash_area_clean": st.session_state.chk_trash,
                     "wall_noise_audible": st.session_state.chk_wall_noise,
-                    "road_noise_level": sp.get("road_noise_level", "없음") if 'sp' in locals() else "없음", # sp 정의 오류 예방 안전식 이식
+                    "road_noise_level": st.session_state.chk_road_noise,
                     "sink_leak_odor": st.session_state.chk_sink_odor,
                     "pet_damage": st.session_state.chk_pet_damage,
                     "area_size": st.session_state.chk_area_size,
@@ -1586,7 +1602,7 @@ elif st.session_state.current_tab == "비교":
         clean_cells = "<div class='comp-label comp-cell'>청결<br>(점수)</div>"
         clean_colors = ["#2F49D1", "#F2994A", "#F2994A"]
         for c_idx, sp in enumerate(selected_props):
-            col = clean_colors[c_idx % len(colors)]
+            col = clean_colors[c_idx % len(clean_colors)]
             clean_cells += f"<div class='comp-cell'><span style='color:{col}; font-size:14px; font-weight:800;'>{int(sp['scores'].get('청결도', 50))}</span></div>"
         html_rows += f"<div class='comp-row'>{clean_cells}</div>"
         
@@ -1660,28 +1676,3 @@ for idx, (label, icon) in enumerate(menu_items_with_key):
         if st.button(label, key=f"nav_btn_{label}", use_container_width=True, type=btn_type):
             st.session_state.current_tab = label
             st.rerun()
-
-# 🛡️ 브라우저 보안 범위를 고려한 호스팅 전용 강제 숨김 자바스크립트 추가
-html("""
-<script>
-    function hideBadges() {
-        try {
-            const targets = [window.parent, window.top];
-            targets.forEach(t => {
-                if (t && t.document) {
-                    t.document.querySelectorAll('[href*="streamlit.io"]').forEach(el => {
-                        el.style.setProperty('display', 'none', 'important');
-                    });
-                    t.document.querySelectorAll('[class*="viewerBadge"]').forEach(el => {
-                        el.style.setProperty('display', 'none', 'important');
-                    });
-                }
-            });
-        } catch (e) {
-            console.log("Parent frame access restricted.");
-        }
-    }
-    window.addEventListener('load', hideBadges);
-    setInterval(hideBadges, 1000); // 동적 렌더링에 맞춰 반복 실행
-</script>
-""", height=0)
