@@ -160,7 +160,7 @@ if 'selected_to_compare' not in st.session_state:
     st.session_state.selected_to_compare = {"mock_a", "mock_b", "mock_c"}
 
 if 'current_tab' not in st.session_state:
-    st.session_state.current_tab = "비교"
+    st.session_state.current_tab = "가이드"
 
 if 'current_step' not in st.session_state:
     st.session_state.current_step = 0
@@ -213,7 +213,7 @@ html, body, [data-testid="stAppViewContainer"] {
     [data-testid="stMainBlockContainer"],
     [data-testid="stAppViewBlockContainer"],
     .stAppViewBlockContainer {
-        background-color: #F8F9FD !important;
+        background-color: #FCFCFF !important;
         width: 430px !important;
         max-width: 430px !important;
         min-width: 430px !important;
@@ -252,17 +252,18 @@ html, body, [data-testid="stAppViewContainer"] {
     /* 모바일 환경에서는 3D 프레임이 무너지므로 전체 배경을 깔끔한 라이트 블루/그레이로 통합하여 아래쪽 검은 영역을 완전히 차단 */
     html, body, 
     [data-testid="stAppViewContainer"], 
+    html, body,
     section.main, 
     [data-testid="stApp"],
     .stApp {
-        background-color: #F8F9FD !important;
+        background-color: #FCFCFF !important;
     }
 
     .block-container,
     [data-testid="stMainBlockContainer"],
     [data-testid="stAppViewBlockContainer"],
     .stAppViewBlockContainer {
-        background-color: #F8F9FD !important;
+        background-color: #FCFCFF !important;
         width: 100% !important;
         max-width: 100% !important;
         min-width: 100% !important;
@@ -329,12 +330,15 @@ html, body, [data-testid="stAppViewContainer"] {
 /* 피그마 카드 스타일 가공 */
 div[data-testid="stVerticalBlockBorderWrapper"] {
     background-color: #FFFFFF !important;
-    border: 1.5px solid #EFF1FE !important;
+    border: 1px solid #F1F3FE !important;
     border-radius: 24px !important;
     padding: 20px 22px !important;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.015) !important;
-    margin-bottom: 12px !important;
+    box-shadow: 0 12px 30px rgba(47, 73, 209, 0.03) !important;
+    margin-bottom: 0px !important;
 }
+
+
+
 
 /* 타이포그래피 정렬 */
 [data-testid="stMainBlockContainer"] p,
@@ -348,20 +352,32 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 
 /* 폼 입력창 고휘도 라운딩 처리 */
-div[data-testid="stTextInput"] input {
+div[data-testid="stTextInput"] div[data-baseweb="input"] {
     border-radius: 14px !important;
     border: 1.5px solid #EFF1FE !important;
     background-color: #FFFFFF !important;
+    overflow: hidden !important;
+}
+div[data-testid="stTextInput"] div[data-baseweb="base-input"] {
+    background-color: transparent !important;
+    padding: 0 !important;
+}
+div[data-testid="stTextInput"] input {
+    background-color: transparent !important;
+    border: none !important;
     color: #1E202C !important;
     height: 48px !important;
     font-size: 14px !important;
     font-weight: 600 !important;
-    padding-left: 16px !important;
+    padding: 0 16px !important;
+    transform: translateY(-4px) !important;
     transition: all 0.25s ease;
 }
-div[data-testid="stTextInput"] input:focus {
+div[data-testid="stTextInput"] div[data-baseweb="input"]:focus-within {
     border-color: #2F49D1 !important;
     box-shadow: 0 0 0 4px rgba(47, 73, 209, 0.08) !important;
+}
+div[data-testid="stTextInput"] input:focus {
     outline: none !important;
 }
 
@@ -371,7 +387,8 @@ div[data-testid="stCheckbox"] {
     background-color: #FFFFFF !important;
     border-radius: 18px !important;
     padding: 18px 20px !important;
-    margin-bottom: 10px !important;
+    margin-top: -4px !important;
+    margin-bottom: 0px !important;
     box-shadow: 0 4px 16px rgba(0,0,0,0.01) !important;
     transition: all 0.2s ease;
 }
@@ -382,7 +399,8 @@ div[data-testid="stCheckbox"] label span {
 }
 
 /* 🎨 피그마 액션 버튼 */
-div.stButton > button[kind="primary"] {
+button[kind="primary"],
+button[data-testid="stBaseButton-primary"] {
     background-color: #2F49D1 !important;
     border: none !important;
     border-radius: 16px !important;
@@ -397,7 +415,8 @@ div.stButton > button[kind="primary"] {
     align-items: center !important;
     justify-content: center !important;
 }
-div.stButton > button[kind="primary"] p {
+button[kind="primary"] p,
+button[data-testid="stBaseButton-primary"] p {
     color: #FFFFFF !important;
     font-size: 14px !important;
     white-space: normal !important;
@@ -406,7 +425,8 @@ div.stButton > button[kind="primary"] p {
     margin: 0 !important;
 }
 
-div.stButton > button[kind="secondary"] {
+button[kind="secondary"],
+button[data-testid="stBaseButton-secondary"] {
     background-color: #FFFFFF !important;
     border: 1.5px solid #2F49D1 !important;
     border-radius: 16px !important;
@@ -420,7 +440,8 @@ div.stButton > button[kind="secondary"] {
     align-items: center !important;
     justify-content: center !important;
 }
-div.stButton > button[kind="secondary"] p {
+button[kind="secondary"] p,
+button[data-testid="stBaseButton-secondary"] p {
     color: #2F49D1 !important;
     font-size: 14px !important;
     white-space: normal !important;
@@ -430,27 +451,34 @@ div.stButton > button[kind="secondary"] p {
 }
 
 /* 📱 4열 필터 버튼 글자 깨짐 완전 차단 및 오버플로우 말줄임표 처리 */
-div:has(> div > .filter-buttons-marker) ~ div div[data-testid="stColumn"] div.stButton > button,
-div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button {
+.element-container:has(.filter-buttons-marker) ~ .element-container div[data-testid="stColumn"] div.stButton > button,
+.element-container:has(.filter-buttons-marker) ~ .element-container div[data-testid="column"] div.stButton > button {
     height: 38px !important;
     min-height: 38px !important;
-    padding: 4px 1px !important;
+    padding: 0px 4px !important;
     border-radius: 10px !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 }
-div:has(> div > .filter-buttons-marker) ~ div div[data-testid="stColumn"] div.stButton > button p,
-div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button p {
-    font-size: 10px !important;
+.element-container:has(.filter-buttons-marker) ~ .element-container div[data-testid="stColumn"] div.stButton > button p,
+.element-container:has(.filter-buttons-marker) ~ .element-container div[data-testid="column"] div.stButton > button p {
+    font-size: 11px !important;
     line-height: 1.15 !important;
     white-space: nowrap !important; 
     overflow: hidden !important;
     text-overflow: ellipsis !important; /* 가로폭 부족 시 자동으로 말줄임(...) 처리 */
+    margin: 0 !important;
+    text-align: center !important;
+    width: 100% !important;
 }
 
 /* 소형 기기 대상 필터 글씨 크기 자동 핏 */
 @media (max-width: 380px) {
-    div:has(> div > .filter-buttons-marker) ~ div div[data-testid="stColumn"] div.stButton > button p,
-    div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stButton > button p {
-        font-size: 8.5px !important;
+    .element-container:has(.filter-buttons-marker) ~ .element-container div[data-testid="stColumn"] div.stButton > button p,
+    .element-container:has(.filter-buttons-marker) ~ .element-container div[data-testid="column"] div.stButton > button p {
+        font-size: 9.5px !important;
     }
 }
 
@@ -468,6 +496,111 @@ div[data-testid="column"] div.stButton > button p {
     white-space: nowrap !important;
 }
 
+/* 📋 셀렉트박스 및 드롭다운 파랑/흰색 계열 테마 적용 (리포트 화면 등) */
+div[data-baseweb="select"] > div {
+    background-color: #EFF1FE !important;
+    border: 1.5px solid #2F49D1 !important;
+    border-radius: 12px !important;
+    color: #2F49D1 !important;
+}
+div[data-baseweb="select"] * {
+    color: #2F49D1 !important;
+    font-weight: 700 !important;
+}
+
+/* ⇆ 멀티셀렉트 선택된 칩(태그) 디자인을 파랑/연파랑 계열로 변경 (기본 빨간색 테마 제거) */
+span[data-baseweb="tag"] {
+    background-color: #EFF1FE !important;
+    color: #2F49D1 !important;
+    border: 1px solid #EFF1FE !important;
+    border-radius: 8px !important;
+}
+span[data-baseweb="tag"] * {
+    color: #2F49D1 !important;
+}
+span[data-baseweb="tag"] svg {
+    fill: #2F49D1 !important;
+}
+
+/* 드롭다운 포탈 팝업 메뉴 스타일링 */
+div[data-baseweb="popover"],
+div[data-baseweb="popover"] > div {
+    background-color: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+div[data-baseweb="popover"] ul, 
+div[data-baseweb="popover"] [data-baseweb="menu"] {
+    background-color: #FFFFFF !important;
+    border: 1.5px solid #EFF1FE !important;
+    border-radius: 16px !important;
+    box-shadow: 0 12px 32px rgba(47, 73, 209, 0.08) !important;
+    padding: 8px !important;
+}
+div[data-baseweb="popover"] li, 
+div[data-baseweb="popover"] [role="option"] {
+    background-color: transparent !important;
+    color: #1E202C !important;
+    font-family: 'Pretendard', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    padding: 10px 14px !important;
+    border-radius: 10px !important;
+    transition: all 0.2s ease !important;
+}
+div[data-baseweb="popover"] li:hover,
+div[data-baseweb="popover"] [role="option"]:hover,
+div[data-baseweb="popover"] [role="option"][aria-selected="true"],
+div[data-baseweb="popover"] li[aria-selected="true"] {
+    background-color: #EFF1FE !important;
+    color: #2F49D1 !important;
+    font-weight: 700 !important;
+}
+
+/* 📋 체크박스 선택 영역(사각형) 파랑 계열 스타일링 */
+div[data-testid="stCheckbox"] input[type="checkbox"] + div span,
+div[data-testid="stCheckbox"] label > span:first-of-type,
+div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > span:first-of-type,
+div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > div:first-of-type {
+    border: 2px solid #2F49D1 !important;
+    border-radius: 6px !important;
+    background-color: #FFFFFF !important;
+    transition: all 0.2s ease !important;
+}
+/* 체크박스 마우스 오버 시 테두리 색상 강조 */
+div[data-testid="stCheckbox"] input[type="checkbox"] + div span:hover,
+div[data-testid="stCheckbox"] label > span:first-of-type:hover,
+div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > span:first-of-type:hover,
+div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > div:first-of-type:hover {
+    border-color: #1928A3 !important;
+}
+/* 활성화(Checked) 상태일 때 */
+div[data-testid="stCheckbox"] input[type="checkbox"]:checked + div span,
+div[data-testid="stCheckbox"] label > span:first-of-type[aria-checked="true"],
+div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > div:first-of-type:has(svg) {
+    background-color: #2F49D1 !important;
+    border-color: #2F49D1 !important;
+}
+div[data-testid="stCheckbox"] input[type="checkbox"]:checked + div span svg,
+div[data-testid="stCheckbox"] label > span:first-of-type svg,
+div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > div:first-of-type svg {
+    fill: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+}
+
+/* 📋 체크박스 텍스트 영역의 의도치 않은 테두리/배경색 강제 제거 */
+div[data-testid="stCheckbox"] [data-testid="stWidgetLabel"],
+div[data-testid="stCheckbox"] [data-testid="stWidgetLabel"] p,
+div[data-testid="stCheckbox"] label > div,
+div[data-testid="stCheckbox"] label > span:last-child,
+div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > div:last-of-type {
+    border: none !important;
+    background-color: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
 /* 🔧 단품 배지 밀착 정렬 및 줄바꿈 버그 방지 개선 */
 .badge-blue {
     background-color: #EFF1FE;
@@ -475,7 +608,7 @@ div[data-testid="column"] div.stButton > button p {
     padding: 5px 12px;
     border-radius: 12px;
     font-size: 11.5px;
-    font-weight: 800;
+    font-weight: 500;
     display: inline-block;
     word-break: keep-all;
     overflow-wrap: break-word;
@@ -488,12 +621,14 @@ div[data-testid="column"] div.stButton > button p {
     padding: 5px 12px;
     border-radius: 12px;
     font-size: 11.5px;
-    font-weight: 800;
+    font-weight: 500;
     display: inline-block;
     word-break: keep-all;
     overflow-wrap: break-word;
     line-height: 1.3;
 }
+
+
 
 .nav-bar-anchor {
     display: none;
@@ -689,7 +824,7 @@ div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] div[
 .app-header-container {
     position: sticky !important;
     top: 0px !important;
-    background-color: #F8F9FD !important;
+    background-color: #FCFCFF !important;
     z-index: 99998 !important;
     display: flex;
     justify-content: space-between;
@@ -704,52 +839,206 @@ div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] div[
 # 🎨 [Onboarding Splash] 플래터 스타일 온보딩 (Glow 후광 및 오버랩 물결 SVG 구현)
 if st.session_state.show_splash:
     st.markdown("""
-<div class="splash-wrapper" style="position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; height: 500px; margin-top: 20px; overflow: hidden; box-sizing: border-box;">
-<svg viewBox="0 0 430 500" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none;">
-<circle cx="429" cy="-84" r="351" fill="url(#topGrad)" />
-<path d="M0 320C148.2 340 253.5 420 351 500H0V320Z" fill="url(#wave1)" />
-<path d="M0 370C124.8 390 214.5 440 292.5 500H0V370Z" fill="url(#wave2)" />
-<path d="M0 420C101.4 430 163.8 460 234 500H0V420Z" fill="url(#wave3)" />
-<circle cx="45" cy="120" r="6.5" fill="#E2E5FF" fill-opacity="0.85" />
-<circle cx="345" cy="300" r="4.5" fill="#E2E5FF" fill-opacity="0.85" />
-<defs>
-<radialGradient id="topGrad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(429 -84) rotate(90) scale(351)">
-<stop stop-color="#E5E8FF" stop-opacity="0.85"/>
-<stop offset="1" stop-color="#E5E8FF" stop-opacity="0"/>
-</radialGradient>
-<linearGradient id="wave1" x1="0" y1="500" x2="390" y2="320" gradientUnits="userSpaceOnUse">
-<stop stop-color="#E2E5FF" stop-opacity="0.85"/>
-<stop offset="1" stop-color="#E2E5FF" stop-opacity="0"/>
-</linearGradient>
-<linearGradient id="wave2" x1="0" y1="500" x2="312" y2="370" gradientUnits="userSpaceOnUse">
-<stop stop-color="#EBEBFF" stop-opacity="0.9"/>
-<stop offset="1" stop-color="#EBEBFF" stop-opacity="0"/>
-</linearGradient>
-<linearGradient id="wave3" x1="0" y1="500" x2="234" y2="420" gradientUnits="userSpaceOnUse">
-<stop stop-color="#DCE1FF" stop-opacity="0.95"/>
-<stop offset="1" stop-color="#DCE1FF" stop-opacity="0"/>
-</linearGradient>
-</defs>
+<style>
+    /* 스플래시 화면일 때만 컨테이너 패딩 제거하여 꽉 차게 만듦 */
+    .block-container, [data-testid="stMainBlockContainer"] {
+        padding: 0 !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+    /* 중간 컨테이너들 여백 완전 리셋 (코너가 비어 보이는 현상 방지) */
+    [data-testid="stMainBlockContainer"] > div {
+        padding: 0 !important;
+        gap: 0 !important;
+    }
+    [data-testid="stVerticalBlock"] {
+        gap: 0 !important;
+        padding: 0 !important;
+    }
+    div[data-testid="element-container"] {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    /* 시작하기 버튼을 맨 아래로 절대 위치 지정 */
+    div[data-testid="stButton"] {
+        position: absolute !important;
+        bottom: 140px !important;
+        left: 20px !important;
+        right: 20px !important;
+        width: calc(100% - 40px) !important;
+        z-index: 999999 !important;
+    }
+    div[data-testid="stButton"] button {
+        width: 100% !important;
+    }
+    .splash-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        background-color: #FCFCFF;
+        border-radius: 0;
+        z-index: 1;
+        display: block;
+    }
+    @media (min-width: 450px) {
+        .splash-wrapper {
+            height: 880px;
+            border-radius: 52px;
+        }
+    }
+
+    /* 슬라이드쇼 텍스트 컨테이너 및 애니메이션 */
+    .splash-desc-container {
+        position: relative;
+        width: 100%;
+        height: 24px;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .splash-desc {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        font-size: 14.5px;
+        font-weight: 500;
+        color: #7B809A;
+        opacity: 0;
+        animation-duration: 12s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+        pointer-events: none;
+    }
+    .splash-desc.slide-1 {
+        animation-name: fadeSlide1;
+    }
+    .splash-desc.slide-2 {
+        animation-name: fadeSlide2;
+    }
+    .splash-desc.slide-3 {
+        animation-name: fadeSlide3;
+    }
+    .splash-desc.slide-4 {
+        animation-name: fadeSlide4;
+    }
+
+    @keyframes fadeSlide1 {
+        0%, 20% { opacity: 1; transform: translateY(0); }
+        23%, 100% { opacity: 0; transform: translateY(-8px); }
+    }
+    @keyframes fadeSlide2 {
+        0%, 23% { opacity: 0; transform: translateY(8px); }
+        25%, 45% { opacity: 1; transform: translateY(0); }
+        48%, 100% { opacity: 0; transform: translateY(-8px); }
+    }
+    @keyframes fadeSlide3 {
+        0%, 48% { opacity: 0; transform: translateY(8px); }
+        50%, 70% { opacity: 1; transform: translateY(0); }
+        73%, 100% { opacity: 0; transform: translateY(-8px); }
+    }
+    @keyframes fadeSlide4 {
+        0%, 73% { opacity: 0; transform: translateY(8px); }
+        75%, 95% { opacity: 1; transform: translateY(0); }
+        98%, 100% { opacity: 0; transform: translateY(-8px); }
+    }
+
+    /* 페이지네이션 도트 애니메이션 */
+    .dot {
+        width: 7.5px;
+        height: 7.5px;
+        border-radius: 50%;
+        background-color: #DCE0F9;
+        animation-duration: 12s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+    .dot.dot-1 {
+        animation-name: dotAnim1;
+    }
+    .dot.dot-2 {
+        animation-name: dotAnim2;
+    }
+    .dot.dot-3 {
+        animation-name: dotAnim3;
+    }
+    .dot.dot-4 {
+        animation-name: dotAnim4;
+    }
+
+    @keyframes dotAnim1 {
+        0%, 20% { background-color: #2F49D1; transform: scale(1.25); }
+        23%, 100% { background-color: #DCE0F9; transform: scale(1); }
+    }
+    @keyframes dotAnim2 {
+        0%, 23% { background-color: #DCE0F9; transform: scale(1); }
+        25%, 45% { background-color: #2F49D1; transform: scale(1.25); }
+        48%, 100% { background-color: #DCE0F9; transform: scale(1); }
+    }
+    @keyframes dotAnim3 {
+        0%, 48% { background-color: #DCE0F9; transform: scale(1); }
+        50%, 70% { background-color: #2F49D1; transform: scale(1.25); }
+        73%, 100% { background-color: #DCE0F9; transform: scale(1); }
+    }
+    @keyframes dotAnim4 {
+        0%, 73% { background-color: #DCE0F9; transform: scale(1); }
+        75%, 95% { background-color: #2F49D1; transform: scale(1.25); }
+        98%, 100% { background-color: #DCE0F9; transform: scale(1); }
+    }
+</style>
+<div class="splash-wrapper">
+<!-- 배경 SVG -->
+<svg viewBox="0 0 430 750" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none;">
+<!-- 우측 상단 큰 원 -->
+<circle cx="390" cy="30" r="150" fill="#F0F1FA" />
+<!-- 작은 점들 -->
+<circle cx="70" cy="170" r="4" fill="#E2E5FA" />
+<circle cx="360" cy="420" r="4" fill="#E2E5FA" />
+<!-- 하단 물결 패턴 -->
+<path d="M-50 750 L -50 550 C 80 540, 200 680, 480 600 L 480 750 Z" fill="#F6F7FC" />
+<path d="M-50 750 L -50 630 C 120 620, 220 720, 480 670 L 480 750 Z" fill="#F0F2FA" />
+<path d="M-50 750 L -50 690 C 100 660, 280 780, 480 710 L 480 750 Z" fill="#EAEBFA" />
 </svg>
-<div class="splash-logo-card" style="width: 154px; height: 154px; background: #FFFFFF; border-radius: 44px; display: flex; align-items: center; justify-content: center; box-shadow: 0 16px 40px rgba(47, 73, 209, 0.24), 0 8px 20px rgba(25, 40, 163, 0.06); margin-top: 50px; margin-bottom: 35px; border: 1.5px solid #F1F3FE;">
-<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M42 82 H18 V42 L50 12 L82 42 L50 72 L32 54" stroke="url(#logoGrad)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- 중앙 콘텐츠 -->
+<div style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+<!-- 로고 카드 -->
+<div class="splash-logo-card" style="width: 154px; height: 154px; background: #FFFFFF; border-radius: 46px; display: flex; align-items: center; justify-content: center; box-shadow: 0 24px 50px rgba(47, 73, 209, 0.12), 0 8px 20px rgba(47, 73, 209, 0.05); margin-bottom: 40px; border: 1.5px solid #F6F7FE;">
+<svg width="86" height="86" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M42 82 H18 V42 L50 14 L82 42 L50 72 L32 54" stroke="url(#logoGrad)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M58 82 H82 V62" stroke="url(#logoGrad)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
 <defs>
-<linearGradient id="logoGrad" x1="100" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-<stop stop-color="#2F49D1" />
-<stop offset="1" stop-color="#1928A3" />
+<linearGradient id="logoGrad" x1="0" y1="100" x2="100" y2="0" gradientUnits="userSpaceOnUse">
+<stop offset="0%" stop-color="#1928A3" />
+<stop offset="100%" stop-color="#4F6BFF" />
 </linearGradient>
 </defs>
 </svg>
 </div>
-<h1 class="splash-title" style="font-size: 34px; font-weight: 800; color: #1E202C; margin: 0; letter-spacing: -0.8px;">룸체크</h1>
-<p class="splash-subtitle" style="font-size: 15px; font-weight: 500; color: #7B809A; margin-top: 5px; margin-bottom: 35px; letter-spacing: 1.0px;">RoomCheck</p>
-<p class="splash-desc" style="font-size: 14.5px; font-weight: 500; color: #7B809A; margin: 0; text-align: center; padding: 0 20px; min-height: 40px;">첫 자취, 더 안심하게 체크하세요</p>
+<!-- 텍스트 영역 -->
+<div class="splash-title" style="font-size: 34px; font-weight: 800; color: #11142D; margin: 0; letter-spacing: -0.8px; text-align: center;">룸체크</div>
+<p class="splash-subtitle" style="font-size: 16px; font-weight: 500; color: #8D94B1; margin-top: 8px; margin-bottom: 30px; letter-spacing: 1.2px; text-align: center; transform: translateX(3px);">RoomCheck</p>
+
+<!-- 슬라이드쇼 텍스트 컨테이너 -->
+<div class="splash-desc-container">
+<div class="splash-desc slide-1">첫 자취, 더 안심하게 체크하세요</div>
+<div class="splash-desc slide-2">스마트 타이머로 수압과 소음을 정확하게</div>
+<div class="splash-desc slide-3">우리 집 맞춤형 분석 리포트 확인까지</div>
+<div class="splash-desc slide-4">저장한 매물의 핵심 지표를 한눈에 비교</div>
+</div>
+
+<!-- 페이지네이션 도트 -->
+<div class="pagination" style="display: flex; gap: 10px; margin-top: 60px;">
+<div class="dot dot-1"></div>
+<div class="dot dot-2"></div>
+<div class="dot dot-3"></div>
+<div class="dot dot-4"></div>
+</div>
+</div>
 </div>
 """, unsafe_allow_html=True)
     
-    st.write("")
     if st.button("시작하기", use_container_width=True, type="primary"):
         st.session_state.show_splash = False
         st.rerun()
@@ -758,18 +1047,16 @@ if st.session_state.show_splash:
 
 # 🏠 유형별 수평 레이아웃 벡터 아이콘 정의
 svg_house = (
-    "<svg width='26' height='26' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'>"
-    "<path d='M3 11l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/>"
-    "<polyline points='9 22 9 16 15 16 15 22'/>"
+    "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>"
+    "<path d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/>"
+    "<polyline points='9 22 9 12 15 12 15 22'/>"
     "</svg>"
 )
 
 svg_building = (
-    "<svg width='26' height='26' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'>"
-    "<rect x='5' y='3' width='14' height='18' rx='2' ry='2'/>"
-    "<line x1='9' y1='22' x2='9' y2='16'/>"
-    "<line x1='15' y1='22' x2='15' y2='16'/>"
-    "<line x1='9' y1='16' x2='15' y2='16'/>"
+    "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>"
+    "<rect x='4' y='2' width='16' height='20' rx='2' ry='2'/>"
+    "<path d='M9 22v-4h6v4'/>"
     "</svg>"
 )
 
@@ -786,75 +1073,114 @@ if st.session_state.current_tab == "가이드":
     </div>
     """, unsafe_allow_html=True)
     
-    st.markdown("<h2 style='color:#2F49D1; font-weight:800; font-size:24px; letter-spacing:-0.6px; margin: 0 0 6px 0;'>임장 전 필수 체크리스트</h2><p style='color:#7B809A; font-size:13px; margin:0 0 20px 0;'>처음 임장 가기 전 꼭 확인할 항목만 간단히 정리했어요</p>", unsafe_allow_html=True)
+    # 가이드 탭 내 체크박스 및 카드 정렬을 위한 로컬 스타일 주입
+    st.markdown("""
+    <style>
+    /* 가이드 탭 내 체크박스 테두리 및 배경 제거 */
+    div[data-testid="stCheckbox"] {
+        border: none !important;
+        background-color: transparent !important;
+        padding: 8px 0 !important;
+        box-shadow: none !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    div[data-testid="stCheckbox"] > label {
+        padding: 0 !important;
+    }
+    /* 체크박스 사이 구분선 추가 */
+    div[data-testid="stCheckbox"] + div[data-testid="stCheckbox"] {
+        border-top: 1px solid #EFF1FE !important;
+        padding-top: 14px !important;
+        margin-top: 4px !important;
+    }
+    /* 체크박스 하단 설명 글자 스타일 조정 (글자 크기 줄이고 회색으로) */
+    div[data-testid="stCheckbox"] [data-testid="stWidgetLabel"] p:nth-child(2) {
+        font-size: 11.5px !important;
+        color: #7B809A !important;
+        font-weight: normal !important;
+        margin-top: 2px !important;
+        line-height: 1.3 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
     
-    # 카드 1: 계약 전 서류 확인
+    # 텍스트 마진을 키워 카테고리 카드들을 좀 더 아래로 이동시킵니다.
+    st.markdown("<div style='color:#2F49D1; font-weight:800; font-size:24px; letter-spacing:-0.6px; margin: 0 0 6px 0;'>임장 전 필수 체크리스트</div><p style='color:#7B809A; font-size:13px; margin:0 0 36px 0;'>처음 임장 가기 전 꼭 확인할 항목만 간단히 정리했어요</p>", unsafe_allow_html=True)
+    
+    # 카드 1: 계약 전 서류 확인 (st.container(border=True) 사용하여 피그마 박스 적용)
     with st.container(border=True):
         st.markdown("""
-        <div style="display:flex; gap:14px; align-items:center; margin-bottom: 18px;">
-            <div style="width:48px; height:48px; background-color:#EFF1FE; border-radius:14px; display:flex; align-items:center; justify-content:center;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F49D1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <div style="display:flex; gap:14px; align-items:center; margin-bottom: 12px;">
+            <div style="width:48px; height:48px; background-color:#EFF1FE; border-radius:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2F49D1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4"/>
                     <polyline points="14 2 14 8 20 8"/>
+                    <path d="M16 22a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    <path d="M18.12 20.12L22 24"/>
                 </svg>
             </div>
-            <div>
-                <h4 style="margin:0; color:#1E202C; font-size:16px; font-weight:800;">계약 전 서류 확인</h4>
-                <p style="margin:2px 0 0 0; color:#7B809A; font-size:12px;">안전한 계약을 위해 꼭 확인해요</p>
+            <div style="display:flex; flex-direction:column; justify-content:center;">
+                <div style="margin:0 !important; color:#1E202C; font-size:16px; font-weight:800; line-height:1.2;">계약 전 서류 확인</div>
+                <div style="margin:4px 0 0 0 !important; color:#7B809A; font-size:12px; line-height:1.3;">안전한 계약을 위해 꼭 확인해요</div>
             </div>
         </div>
+        <div style="border-bottom: 1px solid #EFF1FE; margin-bottom: 8px;"></div>
         """, unsafe_allow_html=True)
         
         st.checkbox("**등기부등본 확인**\n\n소유권, 저당, 융자 비율 확인", key="g_check_1")
         st.checkbox("**건축물대장 확인**\n\n위반건축물 여부 확인", key="g_check_2")
         
-    # 카드 2: 질문 체크리스트
+    st.markdown("<div style='height: 18px;'></div>", unsafe_allow_html=True)
+
+    # 카드 2: 질문 체크리스트 (st.container(border=True) 사용하여 피그마 박스 적용)
     with st.container(border=True):
         st.markdown("""
-        <div style="display:flex; gap:14px; align-items:center; margin-bottom: 18px;">
-            <div style="width:48px; height:48px; background-color:#EFF1FE; border-radius:14px; display:flex; align-items:center; justify-content:center;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F49D1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+        <div style="display:flex; gap:14px; align-items:center; margin-bottom: 12px;">
+            <div style="width:48px; height:48px; background-color:#EFF1FE; border-radius:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2F49D1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
             </div>
-            <div>
-                <h4 style="margin:0; color:#1E202C; font-size:16px; font-weight:800;">중개사 질문 리스트</h4>
-                <p style="margin:2px 0 0 0; color:#7B809A; font-size:12px;">꼭 물어봐야 할 질문을 정리했어요</p>
+            <div style="display:flex; flex-direction:column; justify-content:center;">
+                <div style="margin:0 !important; color:#1E202C; font-size:16px; font-weight:800; line-height:1.2;">중개사 질문 리스트</div>
+                <div style="margin:4px 0 0 0 !important; color:#7B809A; font-size:12px; line-height:1.3;">꼭 물어봐야 할 질문을 정리했어요</div>
             </div>
         </div>
+        <div style="border-bottom: 1px solid #EFF1FE; margin-bottom: 8px;"></div>
         """, unsafe_allow_html=True)
-        
-        q_items = [
-            "현재 공실 기간은 얼마나 되었나요?",
-            "하자 발생 시 수리 비용은 누가 부담하나요?",
-            "관리비에 포함되는 항목은 무엇인가요?"
+
+        questions = [
+            "수압, 배수는 괜찮은가요?",
+            "관리비에 어떤 항목이 포함되나요?",
+            "보일러는 언제 교체하셨나요?",
+            "이전 세입자는 왜 이사 가나요?"
         ]
-        for q in q_items:
+
+        for idx, q in enumerate(questions):
             st.markdown(
-                f"<div style='display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;'>"
-                f"  <div style='width:24px; height:24px; background-color:#EFF1FE; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;'>"
-                f"    <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='3'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>"
-                f"  </div>"
-                f"  <span style='font-size:13.5px; color:#1E202C; font-weight:600; line-height:1.4;'>{q}</span>"
+                f"<div style='display:flex; align-items:center; gap:12px; padding:12px 0; {'border-top:1px solid #EFF1FE;' if idx > 0 else ''}'>"
+                f"  <svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' style='flex-shrink:0;'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>"
+                f"  <span style='font-size:14px; color:#1E202C; font-weight:600; line-height:1.4;'>{q}</span>"
                 f"</div>",
                 unsafe_allow_html=True
             )
 
+    st.markdown("<div style='height: 18px;'></div>", unsafe_allow_html=True)
+    
     # 카드 3: 임장 팁
     st.markdown("""
     <div style='padding: 18px 20px; background-color: #EFF1FE; border-radius: 20px; display: flex; gap: 14px; align-items: center;'>
-        <div style='width: 36px; height: 36px; background-color: #2F49D1; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;'>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A5 5 0 0 0 8 8c0 1 .3 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+        <div style='width: 42px; height: 42px; background-color: #2F49D1; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;'>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
                 <line x1="9" y1="18" x2="15" y2="18"/>
                 <line x1="10" y1="22" x2="14" y2="22"/>
             </svg>
         </div>
         <div>
-            <h5 style='margin:0; color:#2F49D1; font-size:13px; font-weight:bold;'>임장 팁</h5>
-            <p style='margin:2px 0 0 0; color:#4A4E69; font-size:12px; line-height:1.4;'>낮과 밤 분위기가 다를 수 있으니 가능하면 서로 다른 시간대에 한 번씩 확인해 보세요.</p>
+            <h5 style='margin: 5px 0 2px 0; color:#1E202C; font-size:16px; font-weight:800; line-height:1.2;'>임장 팁</h5>
+            <p style='margin: 0; color:#4A4E69; font-size:14px; line-height:1.4;'>낮과 밤 분위기가 다를 수 있으니 가능하면 서로 다른 시간대에 한 번씩 확인해 보세요.</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -876,9 +1202,9 @@ elif st.session_state.current_tab == "체크":
     """, unsafe_allow_html=True)
     
     st.markdown(f"""
-    <div class="step-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <span class="step-num" style="font-size: 13px; color: #2F49D1; font-weight: 800;">{step + 1} / 6 단계</span>
-        <span class="step-title" style="font-size: 13px; font-weight: 700; color: #7B809A;">{steps_titles[step]}</span>
+    <div class="step-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div class="step-num" style="font-size: 16px; color: #1E202C; font-weight: 800; line-height: 1; margin: 0;">{step + 1} / 6 단계</div>
+        <div class="step-title" style="font-size: 16px; color: #1E202C; font-weight: 800; line-height: 1; margin: 0;">{steps_titles[step]}</div>
     </div>
     <div class="custom-progress" style="width: 100%; height: 8px; background-color: #EFF1FE; border-radius: 4px; margin-bottom: 24px; overflow: hidden;">
         <div class="custom-progress-bar" style="width: {((step + 1) / 6) * 100}%; height: 100%; background-color: #2F49D1; transition: width 0.3s ease;"></div>
@@ -899,10 +1225,10 @@ elif st.session_state.current_tab == "체크":
         with st.container(border=True):
             st.markdown("""
             <div style="display:flex; gap:8px; align-items:center; margin-bottom:18px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2F49D1" stroke-width="2.5">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2F49D1" stroke-width="2.5" style="transform: translateY(-5px);">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                 </svg>
-                <h4 style="margin:0; color:#1E202C; font-size:16px; font-weight:800;">1단계 · 기본 매물 조건</h4>
+                <h4 style="margin:0; color:#1E202C; font-size:17px; font-weight:800; line-height:1;">1단계 · 기본 매물 조건</h4>
             </div>
             """, unsafe_allow_html=True)
             
@@ -933,9 +1259,9 @@ elif st.session_state.current_tab == "체크":
     # 2단계: 수압 및 배수 (⏱️ 실시간 타이머 연동)
     elif step == 1:
         with st.container(border=True):
-            st.markdown("<div style='display:flex; gap:8px; align-items:center; margin-bottom:18px;'><span style='font-size:18px;'>💧</span><h4 style='margin:0; color:#1E202C; font-size:15px; font-weight:800;'>2단계 · 수압 및 배수 상태</h4></div>", unsafe_allow_html=True)
+            st.markdown("<div style='display:flex; gap:8px; align-items:center; margin-bottom:18px;'><span style='font-size:18px; line-height:1; display:flex; align-items:center; transform: translateY(-3px);'>💧</span><h4 style='margin:0; color:#1E202C; font-size:17px; font-weight:800; line-height:1;'>2단계 · 수압 및 배수 상태</h4></div>", unsafe_allow_html=True)
             
-            st.markdown(f"<p style='font-size: 13px; font-weight:bold; color:#1E202C;'>수압 측정 시간 (종이컵이 찰 때까지): <span style='color:#2F49D1; font-size:18px; font-weight:bold;'>{st.session_state.chk_water_timer:.1f}초</span></p>", unsafe_allow_html=True)
+            st.markdown(f"<p style='font-size: 13px; font-weight:bold; color:#1E202C;'>수압 측정 시간 (종이컵이 찰 때까지): <b style='color:#2F49D1; font-size:13px;'>{st.session_state.chk_water_timer:.1f}초</b></p>", unsafe_allow_html=True)
             
             if st.session_state.timer_running:
                 elapsed = round(time.time() - st.session_state.timer_start, 1)
@@ -967,7 +1293,7 @@ elif st.session_state.current_tab == "체크":
     # 3단계: 채광 환기 (동적 센서 체크 포함)
     elif step == 2:
         with st.container(border=True):
-            st.markdown("<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;'><div style='display:flex; gap:8px; align-items:center;'><span style='font-size:18px;'>☀️</span><h4 style='margin:0; color:#1E202C; font-size:15px; font-weight:800;'>3단계 · 채광 및 환기 조건</h4></div></div>", unsafe_allow_html=True)
+            st.markdown("<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;'><div style='display:flex; gap:8px; align-items:center;'><span style='font-size:18px; line-height:1; display:flex; align-items:center; transform: translateY(-3px);'>☀️</span><h4 style='margin:0; color:#1E202C; font-size:17px; font-weight:800; line-height:1;'>3단계 · 채광 및 환기 조건</h4></div></div>", unsafe_allow_html=True)
             
             if st.button("🧭 기기 나침반 센서 동적 연동", use_container_width=True):
                 sim_direction = random.choice(["남향", "동남향/남서향", "동향/서향", "북향"])
@@ -994,7 +1320,7 @@ elif st.session_state.current_tab == "체크":
     # 4단계: 치안 및 상권 분석 (실제 CCTV CSV 파일 탐색 및 하버사인 계산식 통합)
     elif step == 3:
         with st.container(border=True):
-            st.markdown("<div style='display:flex; gap:8px; align-items:center; margin-bottom:18px;'><span style='font-size:18px;'>🛡️</span><h4 style='margin:0; color:#1E202C; font-size:15px; font-weight:800;'>4단계 · 치안 및 인프라 연동</h4></div>", unsafe_allow_html=True)
+            st.markdown("<div style='display:flex; gap:8px; align-items:center; margin-bottom:18px;'><span style='font-size:18px; line-height:1; display:flex; align-items:center; transform: translateY(-3px);'>🛡️</span><h4 style='margin:0; color:#1E202C; font-size:17px; font-weight:800; line-height:1;'>4단계 · 치안 및 인프라 연동</h4></div>", unsafe_allow_html=True)
             
             if st.button("🗺️ 인프라 실시간 검색 자동 연동", use_container_width=True, type="primary"):
                 addr = st.session_state.chk_address.strip()
@@ -1086,7 +1412,7 @@ elif st.session_state.current_tab == "체크":
     # 5단계: 소음 측정
     elif step == 4:
         with st.container(border=True):
-            st.markdown("<div style='display:flex; gap:8px; align-items:center; margin-bottom:18px;'><span style='font-size:18px;'>🔊</span><h4 style='margin:0; color:#1E202C; font-size:15px; font-weight:800;'>5단계 · 외부 소음 측정</h4></div>", unsafe_allow_html=True)
+            st.markdown("<div style='display:flex; gap:8px; align-items:center; margin-bottom:18px;'><span style='font-size:18px; line-height:1; display:flex; align-items:center; transform: translateY(-3px);'>🔊</span><h4 style='margin:0; color:#1E202C; font-size:17px; font-weight:800; line-height:1;'>5단계 · 외부 소음 측정</h4></div>", unsafe_allow_html=True)
             
             if st.button("🎤 마이크 활용 실시간 소음 수집", use_container_width=True):
                 st.session_state.chk_noise_open = float(random.randint(55, 75))
@@ -1110,7 +1436,7 @@ elif st.session_state.current_tab == "체크":
     # 6단계: 하자 진단 및 옵션 (3대 구비 옵션으로 통일)
     elif step == 5:
         with st.container(border=True):
-            st.markdown("<div style='display:flex; gap:8px; align-items:center; margin-bottom:18px;'><span style='font-size:18px;'>🛠️</span><h4 style='margin:0; color:#1E202C; font-size:15px; font-weight:800;'>6단계 · 마감 하자 및 구비 옵션</h4></div>", unsafe_allow_html=True)
+            st.markdown("<div style='display:flex; gap:8px; align-items:center; margin-bottom:18px;'><span style='font-size:18px; line-height:1; display:flex; align-items:center; transform: translateY(-3px);'>🛠️</span><h4 style='margin:0; color:#1E202C; font-size:17px; font-weight:800; line-height:1;'>6단계 · 마감 하자 및 구비 옵션</h4></div>", unsafe_allow_html=True)
             
             st.session_state.chk_mold = st.checkbox("벽지/바닥 장판 등에 곰팡이 흔적이 있나요?", value=st.session_state.chk_mold)
             st.session_state.chk_leak = st.checkbox("천장 마감재 등에 누수 흔적이 있나요?", value=st.session_state.chk_leak)
@@ -1118,7 +1444,7 @@ elif st.session_state.current_tab == "체크":
             st.session_state.chk_pet_damage = st.checkbox("벽지가 파손되거나 훼손된 흔적이 있나요?", value=st.session_state.chk_pet_damage)
             
             st.divider()
-            st.markdown("<p style='font-size:13px; font-weight:bold; color:#1E202C;'>📷 하자 증빙 및 참조 이미지 파일 등록</p>", unsafe_allow_html=True)
+            st.markdown("<div style='display:flex; gap:8px; align-items:center; margin-bottom:18px;'><span style='font-size:18px; line-height:1; display:flex; align-items:center; transform: translateY(-3px);'>📷</span><h4 style='margin:0; color:#1E202C; font-size:17px; font-weight:800; line-height:1;'>하자 증빙 및 참조 이미지 파일 등록</h4></div>", unsafe_allow_html=True)
             cam_shot = st.camera_input("실제 카메라로 사진 촬영 등록", label_visibility="collapsed")
             if cam_shot is not None:
                 sim_filename = f"camera_shot_{len(st.session_state.chk_photos) + 1}.png"
@@ -1136,7 +1462,7 @@ elif st.session_state.current_tab == "체크":
                         st.rerun()
 
             st.divider()
-            st.markdown("**📦 기본 가전 옵션 포함 여부 (지출 절감 적용)**")
+            st.markdown("<div style='display:flex; gap:8px; align-items:center; margin-bottom:18px;'><span style='font-size:18px; line-height:1; display:flex; align-items:center; transform: translateY(-3px);'>📦</span><h4 style='margin:0; color:#1E202C; font-size:17px; font-weight:800; line-height:1;'>기본 가전 옵션 포함 여부 (지출 절감 적용)</h4></div>", unsafe_allow_html=True)
             st.session_state.chk_aircon = st.checkbox("에어컨 (월 4만원 공제 적용)", value=st.session_state.chk_aircon)
             st.session_state.chk_washer = st.checkbox("세탁기 (월 3만원 공제 적용)", value=st.session_state.chk_washer)
             st.session_state.chk_fridge = st.checkbox("냉장고 (월 3만원 공제 적용)", value=st.session_state.chk_fridge)
@@ -1144,11 +1470,11 @@ elif st.session_state.current_tab == "체크":
     st.write("")
     
     step_next_labels = [
-        "다음 (수압/배수)",
-        "다음 (채광/환기)",
-        "다음 (치안/생활)",
-        "다음 (소음측정)",
-        "다음 (위생/옵션)",
+        "다음: 수압/배수 체크하기",
+        "다음: 채광/환기 체크하기",
+        "다음: 치안/생활 체크하기",
+        "다음: 소음 측정하기",
+        "다음: 위생/옵션 체크하기",
         "종합분석 실행"
     ]
     next_label = step_next_labels[step]
@@ -1290,7 +1616,7 @@ elif st.session_state.current_tab == "리포트":
         selected_id = col_sel.selectbox("분석된 매물 선택", options=list(prop_opts.keys()), index=len(prop_opts)-1, format_func=lambda x: prop_opts[x], label_visibility="collapsed")
         active_prop = next(p for p in st.session_state.properties if p["id"] == selected_id)
         
-        if col_del.button("🗑️", help="매물 완전 삭제", use_container_width=True):
+        if col_del.button("🗑️", help="매물 완전 삭제", use_container_width=True, type="primary"):
             st.session_state.show_delete_confirm = True
             st.rerun()
 
@@ -1312,45 +1638,38 @@ elif st.session_state.current_tab == "리포트":
                     time.sleep(0.5)
                     st.rerun()
             
-        with st.container(border=True):
-            prop_summary_html = (
-                "<div style='display:flex; align-items:center; gap:14px;'> "
-                "<img src='https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=120&h=120&q=80' style='width:70px; height:70px; border-radius:14px; object-fit:cover;'/>"
-                "<div>"
-                f"<h3 style='margin:0; color:#1E202C; font-size:16px; font-weight:800;'>{active_prop['name']}</h3>"
-                f"<p style='margin:4px 0 0 0; color:#7B809A; font-size:12px;'>{active_prop['address']}</p>"
-                "</div>"
-                "</div>"
-            )
-            st.markdown(prop_summary_html, unsafe_allow_html=True)
-        
-        with st.container(border=True):
-            score_board_html = (
-                "<div style='display:flex; align-items:center; gap:16px;'> "
-                "<div style='width:48px; height:48px; background-color:#EFF1FE; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink: 0;'>"
-                "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='2.5'>"
-                "  <path d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/>"
-                "  <polyline points='22 4 12 14.01 9 11.01'/>"
-                "</svg>"
-                "</div>"
-                "<div>"
-                "<span style='font-size:13px; color:#4A4E69; font-weight:bold;'>거주 적합도</span>"
-                f"<h1 style='margin:2px 0; color:#2F49D1; font-size:32px; font-weight:800; line-height:1;'>{active_prop['overall_score']}<span style='font-size:15px; font-weight:bold;'> 점</span></h1>"
-                "<span style='font-size:11px; color:#7B809A;'>정성 항목을 점수화한 지표입니다</span>"
-                "</div>"
-                "</div>"
-            )
-            st.markdown(score_board_html, unsafe_allow_html=True)
+        combined_header_html = (
+            f"<div style='background-color: white; border: 1.5px solid #EFF1FE; border-radius: 20px; padding: 22px; box-shadow: 0 4px 14px rgba(47,73,209,0.015); margin-bottom: 20px; display: flex; flex-direction: column; gap: 20px;'>"
+            f"  <div style='display: flex; align-items: center; gap: 16px;'>"
+            f"    <img src='https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=120&h=120&q=80' style='width: 68px; height: 68px; border-radius: 16px; object-fit: cover;' />"
+            f"    <div style='flex: 1; display: flex; flex-direction: column; justify-content: center;'>"
+            f"      <div style='color: #1E202C; font-size: 18px; font-weight: 800; line-height: 1.2;'>{active_prop['name']}</div>"
+            f"      <div style='margin-top: 6px; color: #7B809A; font-size: 13px; font-weight: 500;'>{active_prop['address']}</div>"
+            f"    </div>"
+            f"  </div>"
+            f"  <div style='height: 1.5px; background-color: #EFF1FE; width: 100%;'></div>"
+            f"  <div style='display: flex; align-items: center; justify-content: space-between;'>"
+            f"    <div>"
+            f"      <div style='font-size: 14px; color: #1E202C; font-weight: 800; margin-bottom: 4px;'>거주 적합도</div>"
+            f"      <div style='font-size: 11px; color: #8D94B1; font-weight: 600;'>정성 항목을 점수화한 지표입니다</div>"
+            f"    </div>"
+            f"    <div style='display: flex; align-items: center; gap: 12px;'>"
+            f"      <div style='width: 44px; height: 44px; background-color: #EFF1FE; border-radius: 50%; display: flex; align-items: center; justify-content: center;'>"
+            f"        <svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='2.5'>"
+            f"          <path d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/>"
+            f"          <polyline points='22 4 12 14.01 9 11.01'/>"
+            f"        </svg>"
+            f"      </div>"
+            f"      <div style='color: #2F49D1; font-size: 34px; font-weight: 800; line-height: 1; letter-spacing: -1px;'>"
+            f"        {active_prop['overall_score']}<span style='font-size: 16px; font-weight: 700; letter-spacing: 0;'>점</span>"
+            f"      </div>"
+            f"    </div>"
+            f"  </div>"
+            f"</div>"
+        )
+        st.markdown(combined_header_html, unsafe_allow_html=True)
         
         st.markdown("<p style='font-size:15px; font-weight:800; color:#1E202C; margin-bottom:12px; margin-top:8px;'>항목별 상세 점수</p>", unsafe_allow_html=True)
-        
-        categories_with_scores = [
-            f"수압<br><b style='color:#2F49D1;'>{int(active_prop['scores'].get('수압', 50))}</b>",
-            f"채광<br><b style='color:#2F49D1;'>{int(active_prop['scores'].get('채광', 50))}</b>",
-            f"보안<br><b style='color:#2F49D1;'>{int(active_prop['scores'].get('보안', 50))}</b>",
-            f"소음<br><b style='color:#2F49D1;'>{int(active_prop['scores'].get('소음', 50))}</b>",
-            f"청결<br><b style='color:#2F49D1;'>{int(active_prop['scores'].get('청결도', 50))}</b>"
-        ]
         
         scores_list = [
             active_prop["scores"].get("수압", 50),
@@ -1360,29 +1679,9 @@ elif st.session_state.current_tab == "리포트":
             active_prop["scores"].get("청결도", 50)
         ]
         
-        fig = go.Figure()
-        fig.add_trace(go.Scatterpolar(
-            r=scores_list + [scores_list[0]],
-            theta=categories_with_scores + [categories_with_scores[0]],
-            fill='toself',
-            fillcolor='rgba(47, 73, 209, 0.12)',
-            line=dict(color='#2F49D1', width=2),
-            marker=dict(size=6, color='#2F49D1')
-        ))
-        fig.update_layout(
-            polar=dict(
-                radialaxis=dict(visible=True, range=[0, 100], gridcolor="#EFF1FE", linecolor="#EFF1FE", tickfont=dict(size=8, color="#8D94B1")),
-                angularaxis=dict(gridcolor="#EFF1FE", linecolor="#EFF1FE", tickfont=dict(size=11, color="#1E202C", weight='bold', family="Pretendard"))
-            ),
-            showlegend=False,
-            height=260,
-            margin=dict(l=45, r=45, t=20, b=20),
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)'
-        )
         with st.container(border=True):
-            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-        
+            chart_placeholder = st.empty()
+            
         # 선택된 매물의 항목별 강점/주의 지수를 동적으로 산출합니다.
         scores_dict = active_prop.get("scores", {})
         sorted_scores = sorted(scores_dict.items(), key=lambda x: x[1], reverse=True)
@@ -1414,66 +1713,134 @@ elif st.session_state.current_tab == "리포트":
             weak_rec = "누수/장판 확인"
 
         pro_con_html = textwrap.dedent(f"""
-        <div style="display: flex; gap: 12px; margin-bottom: 12px; box-sizing: border-box; width: 100%;">
-            <div style="flex: 1; background-color: #FFFFFF; border: 1.5px solid #EFF1FE; border-radius: 20px; padding: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.01); display: flex; flex-direction: column;">
-                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
-                    <div style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2F49D1" stroke-width="3">
+        <div style="display: flex; gap: 10px; margin-bottom: 12px; box-sizing: border-box; width: 100%;">
+            <div style="flex: 1; background-color: #FFFFFF; border: 1.5px solid #EFF1FE; border-radius: 20px; padding: 14px 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.01); display: flex; flex-direction: column;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+                    <div style="width: 30px; height: 30px; background-color: #2F49D1; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
                         </svg>
                     </div>
-                    <span style="color: #1E202C; font-weight: 800; font-size: 13.5px; line-height: 1;">강점</span>
+                    <div style="color: #1E202C; font-weight: 800; font-size: 15px; line-height: 1;">강점</div>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start; width: 100%;">
-                    <span class="badge-blue">{strongest_label} {int(strongest_val)}</span>
-                    <span class="badge-blue">{second_label} {int(second_val)}</span>
+                <div style="display: flex; flex-direction: row; flex-wrap: nowrap; gap: 4px; align-items: center; width: 100%;">
+                    <span class="badge-blue" style="font-size: 10.5px !important; padding: 4px 6px !important; white-space: nowrap !important; flex-shrink: 0 !important;">{strongest_label} {int(strongest_val)}</span>
+                    <span class="badge-blue" style="font-size: 10.5px !important; padding: 4px 6px !important; white-space: nowrap !important; flex-shrink: 0 !important;">{second_label} {int(second_val)}</span>
                 </div>
             </div>
-            <div style="flex: 1; background-color: #FFFFFF; border: 1.5px solid #EFF1FE; border-radius: 20px; padding: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.01); display: flex; flex-direction: column;">
-                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
-                    <div style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF5A36" stroke-width="3">
+            <div style="flex: 1; background-color: #FFFFFF; border: 1.5px solid #EFF1FE; border-radius: 20px; padding: 14px 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.01); display: flex; flex-direction: column;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+                    <div style="width: 30px; height: 30px; background-color: #FFF2EE; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF5A36" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"/>
                         </svg>
                     </div>
-                    <span style="color: #1E202C; font-weight: 800; font-size: 13.5px; line-height: 1;">주의</span>
+                    <div style="color: #1E202C; font-weight: 800; font-size: 15px; line-height: 1;">주의</div>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start; width: 100%;">
-                    <span class="badge-orange">{weakest_label} {int(weakest_val)}</span>
-                    <span class="badge-orange">{weak_rec}</span>
+                <div style="display: flex; flex-direction: row; flex-wrap: nowrap; gap: 4px; align-items: center; width: 100%;">
+                    <span class="badge-orange" style="font-size: 10.5px !important; padding: 4px 6px !important; white-space: nowrap !important; flex-shrink: 0 !important;">{weakest_label} {int(weakest_val)}</span>
+                    <span class="badge-orange" style="font-size: 10.5px !important; padding: 4px 6px !important; white-space: nowrap !important; flex-shrink: 0 !important;">{weak_rec.replace(' ', '')}</span>
                 </div>
             </div>
         </div>
         """)
         st.markdown(pro_con_html, unsafe_allow_html=True)
             
-        with st.container(border=True):
-            pro_desc = f"{strongest_label} 및 {second_label} 상태가 상대적으로 우수하다는 강점을 가지고 있습니다."
-            if weakest_val < 70:
-                con_desc = f"다만, 보완이 필요한 {weakest_label} 지수를 고려해 계약을 결정하기 전에 꼭 {weak_rec} 활동을 권장해 드립니다."
-            else:
-                con_desc = "전반적으로 평가 항목들이 고른 균형을 이루고 있어 만족스러운 생활이 기대됩니다."
-            summary_text = f"{pro_desc} {con_desc}"
-            
-            summary_html = textwrap.dedent(f"""
-            <div style='display:flex; gap:12px; align-items:start;'> 
-                <div style='width:36px; height:36px; background-color:#EFF1FE; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;'>
-                    <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='2.5'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>
-                </div>
-                <div>
-                    <h5 style='margin:0; color:#1E202C; font-size:13px; font-weight:bold;'>체크 결과 요약</h5>
-                    <p style='margin:4px 0 0 0; color:#4A4E69; font-size:12.5px; line-height:1.4;'>{summary_text}</p>
-                </div>
+        pro_desc = f"{strongest_label} 및 {second_label} 상태가 상대적으로 우수하다는 강점을 가지고 있습니다."
+        if weakest_val < 70:
+            con_desc = f"다만, 보완이 필요한 {weakest_label} 지수를 고려해 계약을 결정하기 전에 꼭 {weak_rec} 활동을 권장해 드립니다."
+        else:
+            con_desc = "전반적으로 평가 항목들이 고른 균형을 이루고 있어 만족스러운 생활이 기대됩니다."
+        
+        summary_html = f"""
+        <div style="background-color: #FFFFFF; border: 1.5px solid #EFF1FE; border-radius: 20px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.01); display: flex; gap: 16px; align-items: flex-start; margin-bottom: 24px; width: 100%; box-sizing: border-box;">
+            <div style="width: 44px; height: 44px; background-color: #EFF1FE; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2F49D1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    <line x1="8" y1="9.5" x2="16" y2="9.5"></line>
+                    <line x1="8" y1="13.5" x2="13" y2="13.5"></line>
+                </svg>
             </div>
-            """)
-            st.markdown(summary_html, unsafe_allow_html=True)
+            <div style="display: flex; flex-direction: column; justify-content: center; padding-top: 2px;">
+                <div style="margin-bottom: 8px; color:#1E202C; font-size: 16px; font-weight: 800; line-height: 1.2;">체크 결과 요약</div>
+                <div style="color:#4A4E69; font-size: 14px; line-height: 1.6; word-break: keep-all;">{pro_desc} {con_desc}</div>
+            </div>
+        </div>
+        """
+        st.markdown(summary_html, unsafe_allow_html=True)
+        
+        should_animate = st.session_state.get("animated_prop_id") != active_prop["id"]
+        
+        final_categories = [
+            f"수압<br><b style='color:#2F49D1;'>{int(scores_list[0])}</b>",
+            f"채광<br><b style='color:#2F49D1;'>{int(scores_list[1])}</b>",
+            f"보안<br><b style='color:#2F49D1;'>{int(scores_list[2])}</b>",
+            f"소음<br><b style='color:#2F49D1;'>{int(scores_list[3])}</b>",
+            f"청결<br><b style='color:#2F49D1;'>{int(scores_list[4])}</b>"
+        ]
+        
+        if should_animate:
+            steps = 15
+            for step in range(1, steps + 1):
+                progress = step / steps
+                # 부드러운 감속 효과 (Ease-out cubic)
+                ease_progress = 1 - pow(1 - progress, 3)
+                
+                current_scores = [s * ease_progress for s in scores_list]
+                
+                fig = go.Figure()
+                fig.add_trace(go.Scatterpolar(
+                    r=current_scores + [current_scores[0]],
+                    theta=final_categories + [final_categories[0]],
+                    fill='toself',
+                    fillcolor='rgba(47, 73, 209, 0.12)',
+                    line=dict(color='#2F49D1', width=2),
+                    marker=dict(size=6, color='#2F49D1')
+                ))
+                fig.update_layout(
+                    polar=dict(
+                        radialaxis=dict(visible=True, range=[0, 100], gridcolor="#EFF1FE", linecolor="#EFF1FE", tickfont=dict(size=8, color="#8D94B1")),
+                        angularaxis=dict(gridcolor="#EFF1FE", linecolor="#EFF1FE", tickfont=dict(size=11, color="#1E202C", weight='bold', family="Pretendard"))
+                    ),
+                    showlegend=False,
+                    height=300,
+                    margin=dict(l=45, r=45, t=45, b=45),
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)'
+                )
+                chart_placeholder.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+                time.sleep(0.04)
+            
+            st.session_state["animated_prop_id"] = active_prop["id"]
+        else:
+            fig = go.Figure()
+            fig.add_trace(go.Scatterpolar(
+                r=scores_list + [scores_list[0]],
+                theta=final_categories + [final_categories[0]],
+                fill='toself',
+                fillcolor='rgba(47, 73, 209, 0.12)',
+                line=dict(color='#2F49D1', width=2),
+                marker=dict(size=6, color='#2F49D1')
+            ))
+            fig.update_layout(
+                polar=dict(
+                    radialaxis=dict(visible=True, range=[0, 100], gridcolor="#EFF1FE", linecolor="#EFF1FE", tickfont=dict(size=8, color="#8D94B1")),
+                    angularaxis=dict(gridcolor="#EFF1FE", linecolor="#EFF1FE", tickfont=dict(size=11, color="#1E202C", weight='bold', family="Pretendard"))
+                ),
+                showlegend=False,
+                height=300,
+                margin=dict(l=45, r=45, t=45, b=45),
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)'
+            )
+            chart_placeholder.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
         
         st.write("")
         col_act1, col_act2 = st.columns(2)
-        if col_act1.button("＋ 비교에 추가", type="primary", use_container_width=True):
+        if col_act1.button("+ 비교에 추가", type="primary", use_container_width=True):
             st.session_state.selected_to_compare.add(selected_id)
             st.toast("비교대상군 리스트에 추가되었습니다.")
-        if col_act2.button("📥 리포트 저장", type="secondary", use_container_width=True):
+        if col_act2.button("▼ 리포트 저장", type="secondary", use_container_width=True):
             st.toast("리포트가 다운로드 폴더에 보관되었습니다.")
 
 # =====================================================================
@@ -1489,26 +1856,26 @@ elif st.session_state.current_tab == "비교":
     </div>
     """, unsafe_allow_html=True)
     
-    st.markdown("<h3 style='color:#2F49D1; font-weight:800; font-size:22px; letter-spacing:-0.6px; margin: 0 0 14px 0; line-height:1.3;'>저장한 매물의 핵심 지표를<br>한눈에 비교해 보세요</h3>", unsafe_allow_html=True)
+    st.markdown("<div style='color:#2F49D1; font-weight:800; font-size:22px; letter-spacing:-0.6px; margin: 0 0 14px 0; line-height:1.3;'>저장한 매물의 핵심 지표를<br>한눈에 비교해 보세요</div>", unsafe_allow_html=True)
     
     # CSS 개별 필터 식별 마커
     st.markdown('<div class="filter-buttons-marker"></div>', unsafe_allow_html=True)
     
     col_f1, col_f2, col_f3, col_f4 = st.columns(4)
     with col_f1:
-        if st.button("월세 ≤60", key="fl_rent_btn", type="primary" if st.session_state.fl_rent else "secondary"):
+        if st.button("월세 60 ▼", key="fl_rent_btn", use_container_width=True, type="primary" if st.session_state.fl_rent else "secondary"):
             st.session_state.fl_rent = not st.session_state.fl_rent
             st.rerun()
     with col_f2:
-        if st.button("보안 80+", key="fl_sec_btn", type="primary" if st.session_state.fl_sec else "secondary"):
+        if st.button("보안 80 ▲", key="fl_sec_btn", use_container_width=True, type="primary" if st.session_state.fl_sec else "secondary"):
             st.session_state.fl_sec = not st.session_state.fl_sec
             st.rerun()
     with col_f3:
-        if st.button("채광 70+", key="fl_light_btn", type="primary" if st.session_state.fl_light else "secondary"):
+        if st.button("채광 70 ▲", key="fl_light_btn", use_container_width=True, type="primary" if st.session_state.fl_light else "secondary"):
             st.session_state.fl_light = not st.session_state.fl_light
             st.rerun()
     with col_f4:
-        if st.button("소음 낮음", key="fl_noise_btn", type="primary" if st.session_state.fl_noise else "secondary"):
+        if st.button("소음 ▼", key="fl_noise_btn", use_container_width=True, type="primary" if st.session_state.fl_noise else "secondary"):
             st.session_state.fl_noise = not st.session_state.fl_noise
             st.rerun()
             
@@ -1549,10 +1916,10 @@ elif st.session_state.current_tab == "비교":
             icon_svg = svg_building if is_building else svg_house
             
             card_html = (
-                "<div style='background-color: white; border: 1.5px solid #EFF1FE; padding: 18px 4px; border-radius: 20px; text-align: center; box-shadow: 0 4px 14px rgba(47,73,209,0.015);'>"
-                f"<div style='width:48px; height:48px; background-color:#EFF1FE; border-radius:16px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;'>{icon_svg}</div>"
-                f"<h4 style='margin: 0 0 4px 0; font-size:13px; color:#1E202C; font-weight:800; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;'>{sp['name']}</h4>"
-                f"<span class='badge-blue' style='font-size:12px; margin-top:2px;'>{sp['overall_score']}점</span>"
+                "<div style='background-color: white; border: 1.5px solid #EFF1FE; padding: 18px 4px; border-radius: 20px; box-shadow: 0 4px 14px rgba(47,73,209,0.015); display: flex; flex-direction: column; align-items: center; justify-content: center;'>"
+                f"<div style='width:48px; height:48px; background-color:#EFF1FE; border-radius:16px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;'>{icon_svg}</div>"
+                f"<div style='width: 100%; display: flex; justify-content: center; margin-bottom: 8px;'><div style='font-size:14px; color:#1E202C; font-weight:800; text-align: center; white-space: nowrap; letter-spacing: -0.5px;'>{sp['name']}</div></div>"
+                f"<div style='display: flex; justify-content: center;'><span class='badge-blue' style='font-size:12px; margin-top:2px;'>{sp['overall_score']}점</span></div>"
                 "</div>"
             )
             with card_cols[idx]:
@@ -1567,7 +1934,7 @@ elif st.session_state.current_tab == "비교":
         rent_cells = "<div class='comp-label comp-cell'>월세<br>(만원)</div>"
         for c_idx, sp in enumerate(selected_props):
             col = colors[c_idx % len(colors)]
-            rent_cells += f"<div class='comp-cell'><span style='color:{col}; font-size:14px; font-weight:800;'>{sp['rent']}</span></div>"
+            rent_cells += f"<div class='comp-cell'><span style='color:{col}; font-size:14px; font-weight:600;'>{sp['rent']}</span></div>"
         html_rows += f"<div class='comp-row'>{rent_cells}</div>"
         
         # 2. 채광 비교 행
@@ -1576,7 +1943,7 @@ elif st.session_state.current_tab == "비교":
             val = "좋음" if sp["scores"]["채광"] >= 80 else "보통"
             bg = "#EBFDF2" if val == "좋음" else "#EFF1FE"
             col = "#107C41" if val == "좋음" else "#7B809A"
-            badge = f"<span style='background-color:{bg}; color:{col}; font-size:11px; font-weight:800; padding:6px 14px; border-radius:20px;'>{val}</span>"
+            badge = f"<span style='background-color:{bg}; color:{col}; font-size:11px; font-weight:700; padding:6px 14px; border-radius:20px;'>{val}</span>"
             light_cells += f"<div class='comp-cell'>{badge}</div>"
         html_rows += f"<div class='comp-row'>{light_cells}</div>"
         
@@ -1585,7 +1952,7 @@ elif st.session_state.current_tab == "비교":
         sec_colors = ["#2F49D1", "#27AE60", "#F2994A"]
         for c_idx, sp in enumerate(selected_props):
             col = sec_colors[c_idx % len(sec_colors)]
-            sec_cells += f"<div class='comp-cell'><span style='color:{col}; font-size:14px; font-weight:800;'>{int(sp['scores']['보안'])}</span></div>"
+            sec_cells += f"<div class='comp-cell'><span style='color:{col}; font-size:14px; font-weight:600;'>{int(sp['scores']['보안'])}</span></div>"
         html_rows += f"<div class='comp-row'>{sec_cells}</div>"
         
         # 4. 소음 비교 행
@@ -1594,7 +1961,7 @@ elif st.session_state.current_tab == "비교":
             val = "주의" if sp["scores"].get("소음", 50) < 50 else ("양호" if sp["scores"].get("소음", 50) >= 60 else "보통")
             bg = "#FFF0E6" if val == "주의" else ("#EBFDF2" if val == "양호" else "#EFF1FE")
             col = "#E65100" if val == "주의" else ("#107C41" if val == "양호" else "#7B809A")
-            badge = f"<span style='background-color:{bg}; color:{col}; font-size:11px; font-weight:800; padding:6px 14px; border-radius:20px;'>{val}</span>"
+            badge = f"<span style='background-color:{bg}; color:{col}; font-size:11px; font-weight:700; padding:6px 14px; border-radius:20px;'>{val}</span>"
             noise_cells += f"<div class='comp-cell'>{badge}</div>"
         html_rows += f"<div class='comp-row'>{noise_cells}</div>"
         
@@ -1603,7 +1970,7 @@ elif st.session_state.current_tab == "비교":
         clean_colors = ["#2F49D1", "#F2994A", "#F2994A"]
         for c_idx, sp in enumerate(selected_props):
             col = clean_colors[c_idx % len(clean_colors)]
-            clean_cells += f"<div class='comp-cell'><span style='color:{col}; font-size:14px; font-weight:800;'>{int(sp['scores'].get('청결도', 50))}</span></div>"
+            clean_cells += f"<div class='comp-cell'><span style='color:{col}; font-size:14px; font-weight:600;'>{int(sp['scores'].get('청결도', 50))}</span></div>"
         html_rows += f"<div class='comp-row'>{clean_cells}</div>"
         
         st.markdown(f"<div class='comp-table'>{html_rows}</div>", unsafe_allow_html=True)
@@ -1634,26 +2001,28 @@ elif st.session_state.current_tab == "비교":
             
             insight_items_html += (
                 f"<div style='display:flex; gap:12px; align-items:flex-start; margin-bottom:12px; box-sizing: border-box; width: 100%;'>"
-                f"  <div style='background-color:{bg_col}; color:white; font-size:11px; font-weight:800; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;'>{idx_p + 1}</div>"
-                f"  <div style='font-size:13px; color:#4A4E69; line-height:1.45; word-break:keep-all;'>"
-                f"    <span style='color:{bg_col}; font-weight:800; font-size:13.5px;'>{short_name}</span>: {desc}"
+                f"  <div style='background-color:{bg_col}; color:white; font-size:12px; font-weight:800; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:0px;'>{idx_p + 1}</div>"
+                f"  <div style='font-size:14px; color:#4A4E69; line-height:1.5; word-break:keep-all;'>"
+                f"    <span style='color:{bg_col}; font-weight:800; font-size:14.5px;'>{short_name}</span>: {desc}"
                 f"  </div>"
                 f"</div>"
             )
             
-        with st.container(border=True):
-            insight_html = (
-                "<div style='display:flex; align-items:center; gap:8px; margin-bottom:14px;'>"
-                "  <div style='width:24px; height:24px; background-color:#EFF1FE; border-radius:50%; display:flex; align-items:center; justify-content:center;'>"
-                "    <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='3'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>"
-                "  </div>"
-                "  <span style='color:#1E202C; font-weight:800; font-size:14px;'>한눈에 보기</span>"
-                "</div>"
-                f"<div style='display:flex; flex-direction:column; gap:12px;'>"
-                f"{insight_items_html}"
-                "</div>"
-            )
-            st.markdown(insight_html, unsafe_allow_html=True)
+        # 한눈에 보기 카드 전체를 감싸는 래퍼 (표와 동일한 디자인)
+        insight_html = (
+            "<div style='margin-top: 16px; border: 1.5px solid #EFF1FE; border-radius: 20px; background-color: #FFFFFF; padding: 24px 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.01);'>"
+            "<div style='display:flex; align-items:center; gap:8px; margin-bottom:16px;'>"
+            "  <div style='width:28px; height:28px; background-color:#EFF1FE; border-radius:50%; display:flex; align-items:center; justify-content:center;'>"
+            "    <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#2F49D1' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z'/><circle cx='8' cy='12' r='1.5' fill='#2F49D1' stroke='none'/><circle cx='12' cy='12' r='1.5' fill='#2F49D1' stroke='none'/><circle cx='16' cy='12' r='1.5' fill='#2F49D1' stroke='none'/></svg>"
+            "  </div>"
+            "  <span style='color:#1E202C; font-weight:800; font-size:16px;'>한눈에 보기</span>"
+            "</div>"
+            f"<div style='display:flex; flex-direction:column; gap:14px;'>"
+            f"{insight_items_html}"
+            "</div>"
+            "</div>"
+        )
+        st.markdown(insight_html, unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------
 # 📱 하단 고정 내비게이션 바 레이아웃 출력
