@@ -175,7 +175,7 @@ chk_defaults = {
     "chk_name": "", "chk_address": "", "chk_deposit": "3000", "chk_rent": "60", "chk_area_size": "12", "chk_loan_ratio": "15",
     "chk_water_timer": 5.0, "chk_drainage": "매우 원활 (바로 빠짐)", "chk_toilet": "매우 원활", "chk_sim_drainage": False,
     "chk_direction": "남향", "chk_window_size": "중 (일반 창문)", "chk_obstruction": "충분함", "chk_ventilation": False, "chk_condensation": False,
-    "chk_cctv": 0, "chk_cvs": 0, "chk_pharmacy": 0, "chk_transit": 0, "chk_parking": "여유", "chk_streetlight": False, "chk_trash": True,
+    "chk_cctv": 0, "chk_cvs": 0, "chk_pharmacy": 0, "chk_transit": 0, "chk_parking": "여유", "chk_streetlight": False, "chk_trash": False,
     "chk_noise_open": 60.0, "chk_noise_closed": 35.0, "chk_road_noise": "없음", "chk_wall_noise": False,
     "chk_mold": False, "chk_leak": False, "chk_sink_odor": False, "chk_pet_damage": False, "chk_photos": [],
     "chk_aircon": False, "chk_washer": False, "chk_fridge": False
@@ -381,6 +381,21 @@ div[data-testid="stTextInput"] input:focus {
     outline: none !important;
 }
 
+/* 🎨 Streamlit primaryColor CSS 변수 강제 파란색 오버라이드 */
+:root {
+    --primary-color: #2F49D1 !important;
+}
+/* Streamlit 내부 CSS 변수 오버라이드 */
+.stApp {
+    --primary: #2F49D1 !important;
+}
+/* 체크박스 checked 상태 배경 - Streamlit 기본 빨강 오버라이드 */
+[data-baseweb="checkbox"] input:checked ~ div,
+[data-baseweb="checkbox"] input:checked + div {
+    background-color: #2F49D1 !important;
+    border-color: #2F49D1 !important;
+}
+
 /* 📋 체크박스 - 피그마 카드형 체크리스트 구현 */
 div[data-testid="stCheckbox"] {
     border: 1.5px solid #EFF1FE !important;
@@ -392,10 +407,21 @@ div[data-testid="stCheckbox"] {
     box-shadow: 0 4px 16px rgba(0,0,0,0.01) !important;
     transition: all 0.2s ease;
 }
-div[data-testid="stCheckbox"] label span {
+/* 체크박스 제목 (첫 번째 p) - 기본 굵기 */
+div[data-testid="stCheckbox"] [data-testid="stWidgetLabel"] p:first-child,
+div[data-testid="stCheckbox"] label > div p:first-child {
     font-size: 14.5px !important;
-    font-weight: 700 !important;
+    font-weight: 400 !important;
     color: #1E202C !important;
+}
+/* 체크박스 설명 (두 번째 p 이후) - 작고 얇고 회색 */
+div[data-testid="stCheckbox"] [data-testid="stWidgetLabel"] p:not(:first-child),
+div[data-testid="stCheckbox"] label > div p:not(:first-child) {
+    font-size: 11.5px !important;
+    font-weight: 400 !important;
+    color: #7B809A !important;
+    margin-top: 1px !important;
+    line-height: 1.3 !important;
 }
 
 /* 🎨 피그마 액션 버튼 */
@@ -558,35 +584,35 @@ div[data-baseweb="popover"] li[aria-selected="true"] {
     font-weight: 700 !important;
 }
 
-/* 📋 체크박스 선택 영역(사각형) 파랑 계열 스타일링 */
-div[data-testid="stCheckbox"] input[type="checkbox"] + div span,
-div[data-testid="stCheckbox"] label > span:first-of-type,
-div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > span:first-of-type,
-div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > div:first-of-type {
-    border: 2px solid #2F49D1 !important;
-    border-radius: 6px !important;
+/* 📋 체크박스 시각 박스 스타일 */
+/* BaseWeb: data-baseweb=checkbox 컨테이너 내 첫번째 자식 div = 시각적 체크박스 박스 */
+div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > div:first-child {
+    border-left-color: #2F49D1 !important;
+    border-right-color: #2F49D1 !important;
+    border-top-color: #2F49D1 !important;
+    border-bottom-color: #2F49D1 !important;
     background-color: #FFFFFF !important;
+    border-radius: 6px !important;
     transition: all 0.2s ease !important;
 }
-/* 체크박스 마우스 오버 시 테두리 색상 강조 */
-div[data-testid="stCheckbox"] input[type="checkbox"] + div span:hover,
-div[data-testid="stCheckbox"] label > span:first-of-type:hover,
-div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > span:first-of-type:hover,
-div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > div:first-of-type:hover {
-    border-color: #1928A3 !important;
-}
-/* 활성화(Checked) 상태일 때 */
-div[data-testid="stCheckbox"] input[type="checkbox"]:checked + div span,
-div[data-testid="stCheckbox"] label > span:first-of-type[aria-checked="true"],
-div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > div:first-of-type:has(svg) {
+/* 체크박스 클릭(활성) 상태 감지: label:has(input:checked) */
+div[data-testid="stCheckbox"] label:has(input:checked) [data-baseweb="checkbox"] > div:first-child {
     background-color: #2F49D1 !important;
-    border-color: #2F49D1 !important;
+    border-left-color: #2F49D1 !important;
+    border-right-color: #2F49D1 !important;
+    border-top-color: #2F49D1 !important;
+    border-bottom-color: #2F49D1 !important;
 }
-div[data-testid="stCheckbox"] input[type="checkbox"]:checked + div span svg,
-div[data-testid="stCheckbox"] label > span:first-of-type svg,
-div[data-testid="stCheckbox"] [data-baseweb="checkbox"] > div:first-of-type svg {
+/* 체크 아이콘(SVG) 흰색 */
+div[data-testid="stCheckbox"] label:has(input:checked) [data-baseweb="checkbox"] > div:first-child svg,
+div[data-testid="stCheckbox"] label:has(input:checked) [data-baseweb="checkbox"] > div:first-child svg path {
     fill: #FFFFFF !important;
     stroke: #FFFFFF !important;
+    opacity: 1 !important;
+}
+/* Streamlit native input accent-color fallback */
+div[data-testid="stCheckbox"] input[type="checkbox"] {
+    accent-color: #2F49D1 !important;
 }
 
 /* 📋 체크박스 텍스트 영역의 의도치 않은 테두리/배경색 강제 제거 */
@@ -1095,11 +1121,13 @@ if st.session_state.current_tab == "가이드":
         margin-top: 4px !important;
     }
     /* 체크박스 하단 설명 글자 스타일 조정 (글자 크기 줄이고 회색으로) */
-    div[data-testid="stCheckbox"] [data-testid="stWidgetLabel"] p:nth-child(2) {
+    div[data-testid="stCheckbox"] [data-testid="stWidgetLabel"] p:not(:first-child),
+    div[data-testid="stCheckbox"] [data-testid="stWidgetLabel"] p:nth-child(n+2),
+    div[data-testid="stCheckbox"] [data-testid="stWidgetLabel"] p + p {
         font-size: 11.5px !important;
         color: #7B809A !important;
-        font-weight: normal !important;
-        margin-top: 2px !important;
+        font-weight: 400 !important;
+        margin-top: 1px !important;
         line-height: 1.3 !important;
     }
     </style>
@@ -1179,8 +1207,8 @@ if st.session_state.current_tab == "가이드":
             </svg>
         </div>
         <div>
-            <h5 style='margin: 5px 0 2px 0; color:#1E202C; font-size:16px; font-weight:800; line-height:1.2;'>임장 팁</h5>
-            <p style='margin: 0; color:#4A4E69; font-size:14px; line-height:1.4;'>낮과 밤 분위기가 다를 수 있으니 가능하면 서로 다른 시간대에 한 번씩 확인해 보세요.</p>
+            <div style='margin: 0 0 4px 0; color:#1E202C; font-size:16px; font-weight:800; line-height:1.2;'>임장 팁</div>
+            <div style='margin: 0; color:#4A4E69; font-size:14px; line-height:1.4;'>낮과 밤 분위기가 다를 수 있으니 가능하면 서로 다른 시간대에 한 번씩 확인해 보세요.</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1660,8 +1688,8 @@ elif st.session_state.current_tab == "리포트":
             f"          <polyline points='22 4 12 14.01 9 11.01'/>"
             f"        </svg>"
             f"      </div>"
-            f"      <div style='color: #2F49D1; font-size: 34px; font-weight: 800; line-height: 1; letter-spacing: -1px;'>"
-            f"        {active_prop['overall_score']}<span style='font-size: 16px; font-weight: 700; letter-spacing: 0;'>점</span>"
+            f"      <div style='color: #2F49D1; font-size: 34px; font-weight: 800; line-height: 1.2; letter-spacing: -1px;'>"
+            f"        {active_prop['overall_score']}<span style='font-size: 16px; font-weight: 700; letter-spacing: 0; vertical-align: baseline; margin-left: 2px;'>점</span>"
             f"      </div>"
             f"    </div>"
             f"  </div>"
