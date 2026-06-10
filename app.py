@@ -200,6 +200,17 @@ footer { display: none !important; visibility: hidden !important; }
 [data-testid="stToolbar"] { display: none !important; }
 [data-testid="collapsedControl"] { display: none !important; } /* 사이드바 화살표 원천 차단 */
 
+/* 추가: 배포(Deploy) 버튼, 호스팅 배지, 데브 상태/메뉴 아이콘 가리기 */
+.stAppDeployButton,
+.stDeployButton,
+[data-testid="stStatusWidget"],
+#stDecoration,
+div[class^="viewerBadge_container"],
+iframe[title="Managed App Viewer Menu"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: #0F0F1A !important;
@@ -609,7 +620,7 @@ div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] butt
     font-size: 11px !important;
 }
 
-/* 네비게이션 탭 아이콘 1:1 바인딩 */
+/* 네비게이션 탭 아이콘 1:1 바인닝 */
 div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"] button::before {
     content: "" !important;
     display: inline-block !important;
