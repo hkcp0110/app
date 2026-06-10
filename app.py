@@ -269,8 +269,7 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        /* 하단 고정 탭 바가 넓어진 만큼 가려짐을 막기 위해 padding-bottom을 기존 120px에서 150px로 넓혔습니다. */
-        padding: 24px 12px 150px 12px !important; 
+        padding: 24px 12px 120px 12px !important; /* 바닥 메뉴 여유분 확보 */
         border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
@@ -539,8 +538,6 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
         border-radius: 0 !important;
         border: none !important;
         border-top: 1px solid #EFF1FE !important;
-        /* 모바일 기기 화면의 하단 제스처 바 공간을 확보하기 위해 아래 패딩을 26px에서 44px로 크게 늘려 여유 공간을 마련했습니다. */
-        padding: 10px 14px 44px 14px !important;
     }
     
     /* 하단 내비게이션 컬럼 균등 너비 배분 호환 보장 */
