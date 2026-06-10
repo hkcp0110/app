@@ -223,7 +223,7 @@ html, body, [data-testid="stAppViewContainer"] {
         overflow-y: auto !important;
         overflow-x: hidden !important;
         margin: 40px auto !important;
-        padding: 32px 20px 90px 20px !important; /* 가상 상태바 제거에 따라 상단 패딩 축소 조정 */
+        padding: 32px 20px 150px 20px !important; /* 데스크톱 모의 프레임 내 하단 여백 추가 확보 */
         border: 12px solid #1E202C !important;
         border-radius: 52px !important;
         box-shadow: 0 25px 60px rgba(0,0,0,0.65) !important;
@@ -269,10 +269,7 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 24px 12px 120px 12px !important; /* 바닥 메뉴 여유분 확보 */
-        border: none !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
+        padding: 24px 12px 180px 12px !important; /* 모바일 환경에서 하단 메뉴와 겹치지 않게 바닥 여유분 대폭 확보 */
         position: relative !important;
         box-sizing: border-box !important;
         transform: none !important; /* 모바일에서 fixed 원소 정렬 왜곡을 막기 위해 transform 초기화 */
@@ -1658,6 +1655,9 @@ elif st.session_state.current_tab == "비교":
 # ---------------------------------------------------------------------
 # 📱 하단 고정 내비게이션 바 레이아웃 출력
 # ---------------------------------------------------------------------
+# 고정형 하단 바가 콘텐츠를 가리는 현상을 방지하기 위해 모바일 하단에 물리적인 스크롤 마진용 공백 추가
+st.markdown("<div style='height: 160px;'></div>", unsafe_allow_html=True)
+
 st.markdown('<div class="nav-bar-anchor"></div>', unsafe_allow_html=True)
 nav_bar_cols = st.columns(4)
 
