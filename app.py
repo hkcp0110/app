@@ -223,7 +223,8 @@ html, body, [data-testid="stAppViewContainer"] {
         overflow-y: auto !important;
         overflow-x: hidden !important;
         margin: 40px auto !important;
-        padding: 32px 20px 90px 20px !important; /* 가상 상태바 제거에 따라 상단 패딩 축소 조정 */
+        /* 변경: 상단 고정 탭 메뉴 높이를 고려하여 padding-top을 110px로 확장 */
+        padding: 110px 20px 60px 20px !important; 
         border: 12px solid #1E202C !important;
         border-radius: 52px !important;
         box-shadow: 0 25px 60px rgba(0,0,0,0.65) !important;
@@ -231,25 +232,10 @@ html, body, [data-testid="stAppViewContainer"] {
         box-sizing: border-box !important;
         transform: translate(0, 0) !important;
     }
-    
-    div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"]::after {
-        content: "" !important;
-        position: absolute !important;
-        bottom: 8px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        width: 130px !important;
-        height: 5px !important;
-        background-color: #1E202C !important;
-        border-radius: 10px !important;
-        display: block !important;
-        z-index: 1000002 !important;
-    }
 }
 
 /* 📱 모바일 실기기 접속 대응 (여백 및 배경 색상 완벽 피팅) */
 @media (max-width: 450px) {
-    /* 모바일 환경에서는 3D 프레임이 무너지므로 전체 배경을 깔끔한 라이트 블루/그레이로 통합하여 아래쪽 검은 영역을 완전히 차단 */
     html, body, 
     [data-testid="stAppViewContainer"], 
     section.main, 
@@ -269,14 +255,14 @@ html, body, [data-testid="stAppViewContainer"] {
         min-height: 100vh !important;
         height: auto !important;
         margin: 0 !important;
-        /* 개선: 맨 아래까지 내렸을 때 충분한 공백을 확보하기 위해 하단 패딩을 120px에서 180px로 확대 */
-        padding: 24px 12px 180px 12px !important; 
+        /* 변경: 상단 메뉴 높이를 감안해 상단 여백 85px 확보, 하단은 60px로 여유 확보 */
+        padding: 85px 12px 60px 12px !important;
         border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
         position: relative !important;
         box-sizing: border-box !important;
-        transform: none !important; /* 모바일에서 fixed 원소 정렬 왜곡을 막기 위해 transform 초기화 */
+        transform: none !important;
     }
 }
 
@@ -289,7 +275,6 @@ html, body, [data-testid="stAppViewContainer"] {
         gap: 8px !important;
     }
     
-    /* stColumn과 column 두 가지 스트림릿 버전에 안전 호환되도록 동시 타겟팅 (너비 밀림 현상 완전 해결) */
     div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"],
     div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
         min-width: 0 !important;
@@ -297,21 +282,18 @@ html, body, [data-testid="stAppViewContainer"] {
         flex: 1 1 0% !important;
     }
     
-    /* 1단계 기본 조건 입력창: 첫 번째 컬럼(라벨) 가로 폭 지정 (라벨 85px 고정) */
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="stColumn"]:nth-child(1),
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="column"]:nth-child(1) {
         flex: 0 0 85px !important;
         min-width: 85px !important;
     }
     
-    /* 1단계 기본 조건 입력창: 세 번째 컬럼(단위 배지 만원, %, 평) 가로 폭 지정 (배지 65px 고정) */
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="stColumn"]:nth-child(3),
     div[data-testid="stHorizontalBlock"]:has(div[style*="margin-top: 14px"]) > div[data-testid="column"]:nth-child(3) {
         flex: 0 0 65px !important;
         min-width: 65px !important;
     }
     
-    /* 3단계 리포트 탭: 상단 셀렉트박스와 삭제 버튼 가로 정렬 비율 최적화 (삭제 버튼 52px 고정) */
     div[data-testid="stHorizontalBlock"]:has([data-testid="stSelectbox"]) > div[data-testid="stColumn"]:nth-child(2),
     div[data-testid="stHorizontalBlock"]:has([data-testid="stSelectbox"]) > div[data-testid="column"]:nth-child(2) {
         flex: 0 0 52px !important;
@@ -444,7 +426,7 @@ div:has(> div > .filter-buttons-marker) ~ div div[data-testid="column"] div.stBu
     line-height: 1.15 !important;
     white-space: nowrap !important; 
     overflow: hidden !important;
-    text-overflow: ellipsis !important; /* 가로폭 부족 시 자동으로 말줄임(...) 처리 */
+    text-overflow: ellipsis !important;
 }
 
 /* 소형 기기 대상 필터 글씨 크기 자동 핏 */
@@ -500,17 +482,20 @@ div[data-testid="column"] div.stButton > button p {
     display: none;
 }
 
-/* 하단 내비게이션 영역 고정 및 스타일 */
+/* 변경: 내비게이션 영역을 하단에서 최상단 고정(Top Fixed)으로 변경 */
 div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
     position: fixed !important;
     background-color: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: blur(25px) !important;
-    border-top: 1px solid #EFF1FE !important;
-    padding: 10px 14px 26px 14px !important;
+    border-bottom: 1.5px solid #EFF1FE !important;
+    border-top: none !important;
+    padding: 10px 14px 10px 14px !important;
     z-index: 1000000 !important;
     margin: 0 !important;
     display: flex !important;
     justify-content: space-around !important;
+    top: 0 !important;
+    bottom: auto !important;
 }
 
 @media (min-width: 450px) {
@@ -520,41 +505,39 @@ div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data
         width: 430px !important;
         max-width: 430px !important;
         right: auto !important;
-        bottom: 40px !important;
-        border-bottom-left-radius: 40px !important;
-        border-bottom-right-radius: 40px !important;
-        border-left: 1px solid #EFF1FE !important;
-        border-right: 1px solid #EFF1FE !important;
-        padding: 10px 14px 20px 14px !important;
+        top: 40px !important; /* 데스크톱 프레임 내부 상단에 고정 */
+        border-top-left-radius: 40px !important;
+        border-top-right-radius: 40px !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        border-left: 1.5px solid #EFF1FE !important;
+        border-right: 1.5px solid #EFF1FE !important;
     }
 }
 
 @media (max-width: 450px) {
-    /* 개선: 모바일 뷰포트에서 메뉴바 전체를 75px 위로 띄우고 플로팅 카드로 세련되게 포지셔닝 */
     div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] {
-        left: 12px !important;
-        right: 12px !important;
-        bottom: 75px !important; /* Streamlit 디벨로퍼 마크(약 50px 높이) 위로 안전하게 이동 */
-        width: calc(100% - 24px) !important; /* 좌우 마진 12px씩 배분 */
+        left: 0 !important;
+        right: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
         transform: none !important;
-        border-radius: 20px !important; /* 플로팅 느낌을 주는 둥근 라운딩 */
-        border: 1px solid #EFF1FE !important;
-        box-shadow: 0 10px 30px rgba(47, 73, 209, 0.12) !important; /* 세련된 하단 그림자 효과 */
-        padding: 8px 10px 10px 10px !important;
+        border-radius: 0 !important;
+        border: none !important;
+        border-bottom: 1.5px solid #EFF1FE !important;
     }
     
-    /* 하단 내비게이션 컬럼 균등 너비 배분 호환 보장 */
     div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"],
     div:has(> div > .nav-bar-anchor) ~ div[data-testid="element-container"] div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
         flex: 1 1 0% !important;
         width: 25% !important;
         min-width: 0 !important;
     }
-    
-    /* 모바일 기기 화면에서는 이미 탑재된 OS 하단 바가 있으므로 가상 터치 표시 바를 숨김 처리합니다. */
-    div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"]::after {
-        display: none !important;
-    }
+}
+
+/* 상단 배치로 변경됨에 따라 기존 하단 가상 터치 바 표시기는 제거 */
+div:has(> div > .nav-bar-anchor) ~ div div[data-testid="stHorizontalBlock"]::after {
+    display: none !important;
 }
 
 /* 📋 네비게이션 탭 내부 버튼 */
@@ -1659,7 +1642,7 @@ elif st.session_state.current_tab == "비교":
             st.markdown(insight_html, unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------
-# 📱 하단 고정 내비게이션 바 레이아웃 출력
+# 📱 상단 고정 내비게이션 바 레이아웃 출력
 # ---------------------------------------------------------------------
 st.markdown('<div class="nav-bar-anchor"></div>', unsafe_allow_html=True)
 nav_bar_cols = st.columns(4)
