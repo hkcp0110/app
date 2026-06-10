@@ -194,17 +194,11 @@ st.markdown("""
 <style>
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
-/* 스트림릿 기본 요소 완전 가림 및 요청 사항 반영 */
+/* 스트림릿 기본 요소 완전 가림 */
 [data-testid="stHeader"] { display: none !important; }
 footer { display: none !important; visibility: hidden !important; }
 [data-testid="stToolbar"] { display: none !important; }
 [data-testid="collapsedControl"] { display: none !important; } /* 사이드바 화살표 원천 차단 */
-
-/* 추가된 CSS 스타일 (Deploy 버튼, 메뉴, 푸터, 헤더 제거 및 여백 조정) */
-.stAppDeployButton, .stDeployButton { display: none !important; }
-#MainMenu { visibility: hidden !important; }
-header { visibility: hidden !important; }
-.block-container { padding-top: 1rem !important; }
 
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
